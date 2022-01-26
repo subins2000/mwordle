@@ -1,5 +1,8 @@
+@import url('http://fonts.googleapis.com/css?family=Ubuntu:regular');
+@import url('https://smc.org.in/fonts/raghumalayalamsans.css');
+
 body {
-  font-family: 'Clear Sans', 'Helvetica Neue', Arial, sans-serif;
+  font-family: 'Ubuntu', 'RaghuMalayalamSans', 'Helvetica Neue', Arial, sans-serif;
   text-align: center;
   max-width: 500px;
   margin: 0px auto;

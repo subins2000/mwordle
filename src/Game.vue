@@ -44,6 +44,7 @@ onUnmounted(() => {
 let transliterated = $ref("")
 let validWord = $ref(false)
 const transliterateRows = $ref(Array(6).fill(""))
+let lastRequestController: AbortController;
 const transliterate = async () => {
   const word = currentRow.map((tile) => tile.letter).join('')
   if (word === "") {
@@ -51,7 +52,11 @@ const transliterate = async () => {
     return
   }
   try {
-    const response = await fetch(`https://api.varnamproject.com/atl/ml/${word}`)
+    if (lastRequestController) {
+      lastRequestController.abort()
+    }
+    lastRequestController = new AbortController()
+    const response = await fetch(`https://api.varnamproject.com/atl/ml/${word}`, {signal: lastRequestController.signal})
     const {exact_matches, dictionary_suggestions, tokenizer_suggestions} = await response.json()
     transliterated = [...exact_matches, ...dictionary_suggestions, ...tokenizer_suggestions][0].word
     validWord = exact_matches.length > 0
@@ -64,10 +69,8 @@ function onKey(key: string) {
   if (!allowInput) return
   if (/^[a-zA-Z]$/.test(key)) {
     fillTile(key.toLowerCase())
-    transliterate()
   } else if (key === 'Backspace') {
     clearTile()
-    transliterate()
   } else if (key === 'Enter') {
     completeRow()
   }
@@ -77,6 +80,7 @@ function fillTile(letter: string) {
   for (const tile of currentRow) {
     if (!tile.letter) {
       tile.letter = letter
+      transliterate()
       break
     }
   }
@@ -86,6 +90,7 @@ function clearTile() {
   for (const tile of [...currentRow].reverse()) {
     if (tile.letter) {
       tile.letter = ''
+      transliterate()
       break
     }
   }
@@ -256,7 +261,7 @@ function genResultGrid() {
   right: 0;
   left: 0;
   text-align: center;
-  padding: 5px 0 0;
+  padding: 2px 0 0;
   background: rgba(255, 255, 255, 0.5);
   z-index: 10;
   font-weight: bold;
@@ -321,7 +326,7 @@ function genResultGrid() {
   transition: transform 0.6s;
   backface-visibility: hidden;
   -webkit-backface-visibility: hidden;
-  padding-top: 40px;
+  padding-top: 20px;
 }
 .tile .front {
   border: 2px solid #d3d6da;
