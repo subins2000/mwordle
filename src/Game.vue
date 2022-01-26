@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { onUnmounted } from 'vue'
-import { getWordOfTheDay, allWords } from './words'
+import { getWordOfTheDay } from './words'
 import Keyboard from './Keyboard.vue'
 import { LetterState } from './types'
 
@@ -41,12 +41,33 @@ onUnmounted(() => {
   window.removeEventListener('keyup', onKeyup)
 })
 
+let transliterated = $ref("")
+let validWord = $ref(false)
+const transliterateRows = $ref(Array(6).fill(""))
+const transliterate = async () => {
+  const word = currentRow.map((tile) => tile.letter).join('')
+  if (word === "") {
+    transliterated = ""
+    return
+  }
+  try {
+    const response = await fetch(`https://api.varnamproject.com/atl/ml/${word}`)
+    const {exact_matches, dictionary_suggestions, tokenizer_suggestions} = await response.json()
+    transliterated = [...exact_matches, ...dictionary_suggestions, ...tokenizer_suggestions][0].word
+    validWord = exact_matches.length > 0
+  } catch (e) {
+    console.log(e)
+  }
+}
+
 function onKey(key: string) {
   if (!allowInput) return
   if (/^[a-zA-Z]$/.test(key)) {
     fillTile(key.toLowerCase())
+    transliterate()
   } else if (key === 'Backspace') {
     clearTile()
+    transliterate()
   } else if (key === 'Enter') {
     completeRow()
   }
@@ -73,11 +94,14 @@ function clearTile() {
 function completeRow() {
   if (currentRow.every((tile) => tile.letter)) {
     const guess = currentRow.map((tile) => tile.letter).join('')
-    if (!allWords.includes(guess) && guess !== answer) {
+    if (!validWord && guess !== answer) {
       shake()
       showMessage(`Not in word list`)
       return
     }
+
+    transliterateRows[currentRowIndex] = transliterated;
+    transliterated = ""
 
     const answerLetters: (string | null)[] = answer.split('')
     // first pass: mark correct ones
@@ -179,7 +203,7 @@ function genResultGrid() {
     </div>
   </Transition>
   <header>
-    <h1>VVORDLE</h1>
+    <h1>Mwordle</h1>
     <a
       id="source-link"
       href="https://github.com/yyx990803/vue-wordle"
@@ -196,6 +220,10 @@ function genResultGrid() {
         success && currentRowIndex === index && 'jump'
       ]"
     >
+      <div class="ml-word">
+        <span v-if="currentRowIndex === index">{{transliterated}}</span>
+        <span v-if="transliterateRows[index]">{{transliterateRows[index]}}</span>
+      </div>
       <div
         v-for="(tile, index) in row"
         :class="['tile', tile.letter && 'filled', tile.state && 'revealed']"
@@ -219,6 +247,21 @@ function genResultGrid() {
 </template>
 
 <style scoped>
+#app, .row {
+  position: relative;
+}
+.ml-word {
+  position: absolute;
+  top: 0;
+  right: 0;
+  left: 0;
+  text-align: center;
+  padding: 5px 0 0;
+  background: rgba(255, 255, 255, 0.5);
+  z-index: 10;
+  font-weight: bold;
+  font-size: 1.2rem;
+}
 #board {
   display: grid;
   grid-template-rows: repeat(6, 1fr);
@@ -237,7 +280,7 @@ function genResultGrid() {
   color: #fff;
   background-color: rgba(0, 0, 0, 0.85);
   padding: 16px 20px;
-  z-index: 2;
+  z-index: 20;
   border-radius: 4px;
   transform: translateX(-50%);
   transition: opacity 0.3s ease-out;
@@ -278,6 +321,7 @@ function genResultGrid() {
   transition: transform 0.6s;
   backface-visibility: hidden;
   -webkit-backface-visibility: hidden;
+  padding-top: 40px;
 }
 .tile .front {
   border: 2px solid #d3d6da;
