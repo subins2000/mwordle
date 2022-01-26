@@ -204,7 +204,8 @@ function genResultGrid() {
 }
 
 function shareResult() {
-  var text = `മwordle ${gameNo} ${currentRowIndex+1}/6\n\n${genResultGrid()}`;
+  const tries = success ? currentRowIndex+1 : "X"
+  const text = `മwordle ${gameNo} ${tries}/6\n\n${genResultGrid()}`;
   navigator.clipboard.writeText(text).then(() => {
     showMessage("Copied results to clipboard!", 2000)
   })
@@ -231,12 +232,6 @@ function hideFinished() {
   </Transition>
   <header>
     <h1>മwordle {{gameNo}}</h1>
-    <a
-      id="source-link"
-      href="https://github.com/yyx990803/vue-wordle"
-      target="_blank"
-      >Source</a
-    >
   </header>
   <div id="board">
     <div
@@ -321,6 +316,10 @@ function hideFinished() {
 }
 .message.v-leave-to {
   opacity: 0;
+}
+#finished {
+  top: 25%;
+  background-color: rgba(0, 0, 0, 0.85);
 }
 #finished h2 {
   margin-top: 0;

@@ -1,6 +1,6 @@
 const defaultMessage = ' Using word of the day instead.'
 
-export const gameStartDate = new Date(2022, 0, 26)
+export const gameStartDate = new Date(2022, 0, 27)
 
 // Thanks MaxVT
 // https://stackoverflow.com/a/2627493/1372424
@@ -33,11 +33,17 @@ export function getWordOfTheDay() {
 }
 
 const answers = [
-  'maram',
   'aalam',
-  'kanni',
+  'maram',
   'varam',
   'panni',
+  'mazha',
   'palli',
-  'makan'
+  'makan',
+  'kinar',
+  'kuzhi',
+  'mathil',
+  'kalam',
+  'mannu',
+  'kanni',
 ]
