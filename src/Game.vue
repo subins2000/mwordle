@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { onUnmounted } from 'vue'
-import { getWordOfTheDay } from './words'
+import { gameNo, gameStartDate, getWordOfTheDay } from './words'
 import Keyboard from './Keyboard.vue'
 import { LetterState } from './types'
 
@@ -23,9 +23,10 @@ const currentRow = $computed(() => board[currentRowIndex])
 
 // Feedback state: message and shake
 let message = $ref('')
-let grid = $ref('')
+let winWord = $ref('')
 let shakeRowIndex = $ref(-1)
 let success = $ref(false)
+let finished = $ref(false)
 
 // Keep track of revealed letters for the virtual keyboard
 const letterStates: Record<string, LetterState> = $ref({})
@@ -44,8 +45,9 @@ onUnmounted(() => {
 let transliterated = $ref("")
 let validWord = $ref(false)
 const transliterateRows = $ref(Array(6).fill(""))
+
 let lastRequestController: AbortController;
-const transliterate = async () => {
+async function transliterate() {
   const word = currentRow.map((tile) => tile.letter).join('')
   if (word === "") {
     transliterated = ""
@@ -140,14 +142,13 @@ function completeRow() {
     if (currentRow.every((tile) => tile.state === LetterState.CORRECT)) {
       // yay!
       setTimeout(() => {
-        grid = genResultGrid()
-        showMessage(
-          ['Genius', 'Magnificent', 'Impressive', 'Splendid', 'Great', 'Phew'][
-            currentRowIndex
-          ],
-          -1
-        )
+        winWord = ['Genius', 'Magnificent', 'Impressive', 'Splendid', 'Great', 'Phew'][
+          currentRowIndex
+        ]
         success = true
+        setTimeout(() => {
+          finished = true
+        }, 1600)
       }, 1600)
     } else if (currentRowIndex < board.length - 1) {
       // go the next row
@@ -158,7 +159,10 @@ function completeRow() {
     } else {
       // game over :(
       setTimeout(() => {
-        showMessage(answer.toUpperCase(), -1)
+        showMessage(answer.toUpperCase(), 5000)
+        setTimeout(() => {
+          finished = true
+        }, 1600)
       }, 1600)
     }
   } else {
@@ -198,17 +202,35 @@ function genResultGrid() {
     })
     .join('\n')
 }
+
+function shareResult() {
+  var text = `മwordle ${gameNo} ${currentRowIndex+1}/6\n\n${genResultGrid()}`;
+  navigator.clipboard.writeText(text).then(() => {
+    showMessage("Copied results to clipboard!", 2000)
+  })
+}
+
+function hideFinished() {
+  finished = false
+}
 </script>
 
 <template>
   <Transition>
     <div class="message" v-if="message">
       {{ message }}
-      <pre v-if="grid">{{ grid }}</pre>
+    </div>
+  </Transition>
+  <Transition>
+    <div id="finished" v-if="finished" v-click-outside="hideFinished">
+      <h2 v-if="success">
+        {{winWord}}
+      </h2>
+      <button @click="shareResult">SHARE</button>
     </div>
   </Transition>
   <header>
-    <h1>Mwordle</h1>
+    <h1>മwordle {{gameNo}}</h1>
     <a
       id="source-link"
       href="https://github.com/yyx990803/vue-wordle"
@@ -252,6 +274,9 @@ function genResultGrid() {
 </template>
 
 <style scoped>
+* {
+  outline: none;
+}
 #app, .row {
   position: relative;
 }
@@ -265,7 +290,7 @@ function genResultGrid() {
   background: rgba(255, 255, 255, 0.5);
   z-index: 10;
   font-weight: bold;
-  font-size: 1.2rem;
+  font-size: 1rem;
 }
 #board {
   display: grid;
@@ -278,7 +303,7 @@ function genResultGrid() {
   width: min(350px, calc(var(--height) / 6 * 5));
   margin: 0px auto;
 }
-.message {
+.message, #finished {
   position: absolute;
   left: 50%;
   top: 80px;
@@ -291,8 +316,24 @@ function genResultGrid() {
   transition: opacity 0.3s ease-out;
   font-weight: 600;
 }
+.message {
+  z-index: 100;
+}
 .message.v-leave-to {
   opacity: 0;
+}
+#finished h2 {
+  margin-top: 0;
+}
+#finished button {
+  padding: 10px 30px;
+  font-size: 1.2rem;
+  font-weight: bold;
+  letter-spacing: 1px;
+  background: #6aaa64;
+  color: #fff;
+  border: 1px solid #000;
+  border-radius: 5px;
 }
 .row {
   display: grid;
