@@ -10,3 +10,13 @@ export interface Countdown {
   minutes: string | number,
   seconds: string | number
 }
+
+export interface GameState {
+  gameNo: number,
+  board: {
+    letter: string,
+    state: LetterState
+  }[][],
+  transliteratedRows: string[],
+  currentRowIndex: number
+}

@@ -2,7 +2,7 @@
 import { onUnmounted } from 'vue'
 import { gameNo, getWordOfTheDay } from './words'
 import Keyboard from './Keyboard.vue'
-import { LetterState } from './types'
+import { GameState, LetterState } from './types'
 import {startCountdown} from './utils'
 
 // Get word of the day
@@ -45,7 +45,7 @@ onUnmounted(() => {
 
 let transliterated = $ref("")
 let validWord = $ref(false)
-const transliterateRows = $ref(Array(6).fill(""))
+let transliteratedRows = $ref(Array(6).fill(""))
 
 let lastRequestController: AbortController;
 async function transliterate() {
@@ -108,7 +108,7 @@ function completeRow() {
       return
     }
 
-    transliterateRows[currentRowIndex] = transliterated;
+    transliteratedRows[currentRowIndex] = transliterated;
     transliterated = ""
 
     const answerLetters: (string | null)[] = answer.split('')
@@ -142,18 +142,9 @@ function completeRow() {
     allowInput = false
     if (currentRow.every((tile) => tile.state === LetterState.CORRECT)) {
       // yay!
-      setTimeout(() => {
-        appreciationWord = ['Genius', 'Magnificent', 'Impressive', 'Splendid', 'Great', 'Phew'][
-          currentRowIndex
-        ]
-        success = true
-        setTimeout(() => {
-          gameFinished()
-        }, 1600)
-      }, 1600)
+      setInterval(gameWon, 1600)
     } else if (currentRowIndex < board.length - 1) {
       // go the next row
-      currentRowIndex++
       setTimeout(() => {
         allowInput = true
       }, 1600)
@@ -166,6 +157,8 @@ function completeRow() {
         }, 1600)
       }, 1600)
     }
+    currentRowIndex++
+    saveGame()
   } else {
     shake()
     showMessage('Not enough letters')
@@ -212,6 +205,14 @@ function shareResult() {
   })
 }
 
+function gameWon() {
+  appreciationWord = ['Genius', 'Magnificent', 'Impressive', 'Splendid', 'Great', 'Phew'][
+    currentRowIndex
+  ]
+  success = true
+  gameFinished()
+}
+
 let countdownTimer: number = $ref()
 const countdown = $ref({
   hours: "00",
@@ -220,12 +221,60 @@ const countdown = $ref({
 })
 function gameFinished() {
   finished = true
+  allowInput = false
   countdownTimer = startCountdown(countdown)
 }
 
 function hideFinished() {
   finished = false
   clearInterval(countdownTimer)
+}
+document.addEventListener('keyup', function (evt) {
+  if (evt.keyCode === 27 && finished) {
+    hideFinished()
+  }
+});
+
+function saveGame() {
+  const gameState: GameState = {
+    gameNo,
+    board: Array.from(board),
+    transliteratedRows,
+    currentRowIndex
+  }
+  localStorage.setItem("gameState", JSON.stringify(gameState))
+}
+
+// Saved game state
+let gameState: GameState
+
+function restoreGame() {
+  gameState = JSON.parse(localStorage.getItem("gameState"))
+  if (gameState.gameNo !== gameNo) {
+    localStorage.removeItem("gameState")
+    return
+  }
+
+  transliteratedRows = gameState.transliteratedRows
+  
+  while (currentRowIndex < gameState.currentRowIndex) {
+    for (let [columnIndex, tile] of currentRow.entries()) {
+      const savedRow = gameState.board[currentRowIndex][columnIndex]
+      tile.letter = savedRow.letter
+      tile.state = letterStates[tile.letter] = savedRow.state
+    }
+    if (currentRow.every((tile) => tile.state === LetterState.CORRECT)) {
+      gameWon()
+    }
+    currentRowIndex++
+  }
+  if (currentRowIndex === board.length ) {
+    gameFinished()
+  }
+}
+
+if (localStorage.getItem("gameState")) {
+  restoreGame()
 }
 </script>
 
@@ -236,15 +285,17 @@ function hideFinished() {
     </div>
   </Transition>
   <Transition>
-    <div id="finished" v-if="finished" v-click-outside="hideFinished">
-      <h2 v-if="success">
-        {{appreciationWord}}
-      </h2>
-      <div>
-        Next മwordle in
-        <div id="timer">{{countdown.hours}}:{{countdown.minutes}}:{{countdown.seconds}}</div>
+    <div class="overlay-bg" v-if="finished">
+      <div id="finished" v-click-outside="hideFinished">
+        <h2 v-if="success">
+          {{appreciationWord}}
+        </h2>
+        <div>
+          Next മwordle in
+          <div id="timer">{{countdown.hours}}:{{countdown.minutes}}:{{countdown.seconds}}</div>
+        </div>
+        <button @click="shareResult">SHARE</button>
       </div>
-      <button @click="shareResult">SHARE</button>
     </div>
   </Transition>
   <header>
@@ -261,7 +312,7 @@ function hideFinished() {
     >
       <div class="ml-word">
         <span v-if="currentRowIndex === index">{{transliterated}}</span>
-        <span v-if="transliterateRows[index]">{{transliterateRows[index]}}</span>
+        <span v-if="transliteratedRows[index]">{{transliteratedRows[index]}}</span>
       </div>
       <div
         v-for="(tile, index) in row"
@@ -299,7 +350,8 @@ function hideFinished() {
   left: 0;
   text-align: center;
   padding: 2px 0 0;
-  background: rgba(255, 255, 255, 0.5);
+  background: rgba(0, 0, 0, 0.5);
+  color: #fff;
   z-index: 10;
   font-weight: bold;
   font-size: 1rem;
@@ -354,6 +406,16 @@ function hideFinished() {
   color: #fff;
   border: 1px solid #000;
   border-radius: 5px;
+  cursor: pointer;
+}
+.overlay-bg {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  background: rgba(255, 255, 255, 0.3);
+  z-index: 20;
 }
 .row {
   display: grid;
