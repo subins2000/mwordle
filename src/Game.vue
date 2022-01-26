@@ -51,7 +51,7 @@ let lastRequestController: AbortController;
 async function transliterate() {
   const word = currentRow.map((tile) => tile.letter).join('')
   if (word === "") {
-    transliterated = ""
+    transliteratedRows[currentRowIndex] = ""
     return
   }
   try {
@@ -61,7 +61,7 @@ async function transliterate() {
     lastRequestController = new AbortController()
     const response = await fetch(`https://api.varnamproject.com/atl/ml/${word}`, {signal: lastRequestController.signal})
     const {exact_matches, dictionary_suggestions, tokenizer_suggestions} = await response.json()
-    transliterated = [...exact_matches, ...dictionary_suggestions, ...tokenizer_suggestions][0].word
+    transliteratedRows[currentRowIndex] = [...exact_matches, ...dictionary_suggestions, ...tokenizer_suggestions][0].word
     validWord = exact_matches.length > 0
   } catch (e) {
     console.log(e)
@@ -107,9 +107,6 @@ function completeRow() {
       showMessage(`Not in word list`)
       return
     }
-
-    transliteratedRows[currentRowIndex] = transliterated;
-    transliterated = ""
 
     const answerLetters: (string | null)[] = answer.split('')
     // first pass: mark correct ones
@@ -310,9 +307,8 @@ if (localStorage.getItem("gameState")) {
         success && currentRowIndex === index && 'jump'
       ]"
     >
-      <div class="ml-word">
-        <span v-if="currentRowIndex === index">{{transliterated}}</span>
-        <span v-if="transliteratedRows[index]">{{transliteratedRows[index]}}</span>
+      <div class="ml-word" v-if="transliteratedRows[index]">
+        {{transliteratedRows[index]}}
       </div>
       <div
         v-for="(tile, index) in row"
