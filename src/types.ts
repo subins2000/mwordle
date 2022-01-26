@@ -4,3 +4,9 @@ export const enum LetterState {
   PRESENT = 'present',
   ABSENT = 'absent'
 }
+
+export interface Countdown {
+  hours: string | number,
+  minutes: string | number,
+  seconds: string | number
+}

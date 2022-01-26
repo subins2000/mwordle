@@ -1,8 +1,9 @@
 <script setup lang="ts">
 import { onUnmounted } from 'vue'
-import { gameNo, gameStartDate, getWordOfTheDay } from './words'
+import { gameNo, getWordOfTheDay } from './words'
 import Keyboard from './Keyboard.vue'
 import { LetterState } from './types'
+import {startCountdown} from './utils'
 
 // Get word of the day
 const answer = getWordOfTheDay()
@@ -23,7 +24,7 @@ const currentRow = $computed(() => board[currentRowIndex])
 
 // Feedback state: message and shake
 let message = $ref('')
-let winWord = $ref('')
+let appreciationWord = $ref('')
 let shakeRowIndex = $ref(-1)
 let success = $ref(false)
 let finished = $ref(false)
@@ -142,12 +143,12 @@ function completeRow() {
     if (currentRow.every((tile) => tile.state === LetterState.CORRECT)) {
       // yay!
       setTimeout(() => {
-        winWord = ['Genius', 'Magnificent', 'Impressive', 'Splendid', 'Great', 'Phew'][
+        appreciationWord = ['Genius', 'Magnificent', 'Impressive', 'Splendid', 'Great', 'Phew'][
           currentRowIndex
         ]
         success = true
         setTimeout(() => {
-          finished = true
+          gameFinished()
         }, 1600)
       }, 1600)
     } else if (currentRowIndex < board.length - 1) {
@@ -161,7 +162,7 @@ function completeRow() {
       setTimeout(() => {
         showMessage(answer.toUpperCase(), 5000)
         setTimeout(() => {
-          finished = true
+          gameFinished()
         }, 1600)
       }, 1600)
     }
@@ -211,8 +212,20 @@ function shareResult() {
   })
 }
 
+let countdownTimer: number = $ref()
+const countdown = $ref({
+  hours: "00",
+  minutes: "00",
+  seconds: "00"
+})
+function gameFinished() {
+  finished = true
+  countdownTimer = startCountdown(countdown)
+}
+
 function hideFinished() {
   finished = false
+  clearInterval(countdownTimer)
 }
 </script>
 
@@ -225,8 +238,12 @@ function hideFinished() {
   <Transition>
     <div id="finished" v-if="finished" v-click-outside="hideFinished">
       <h2 v-if="success">
-        {{winWord}}
+        {{appreciationWord}}
       </h2>
+      <div>
+        Next മwordle in
+        <div id="timer">{{countdown.hours}}:{{countdown.minutes}}:{{countdown.seconds}}</div>
+      </div>
       <button @click="shareResult">SHARE</button>
     </div>
   </Transition>
@@ -323,6 +340,10 @@ function hideFinished() {
 }
 #finished h2 {
   margin-top: 0;
+}
+#finished #timer {
+  margin: 20px 0;
+  font-size: 1.5rem;
 }
 #finished button {
   padding: 10px 30px;
