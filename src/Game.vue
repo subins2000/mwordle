@@ -50,13 +50,14 @@ let transliteratedRows = $ref(Array(6).fill(""))
 let lastRequestController: AbortController;
 async function transliterate() {
   const word = currentRow.map((tile) => tile.letter).join('')
-  if (word === "") {
-    transliteratedRows[currentRowIndex] = ""
-    return
-  }
   try {
     if (lastRequestController) {
       lastRequestController.abort()
+      lastRequestController = null
+    }
+    if (word === "") {
+      transliteratedRows[currentRowIndex] = ""
+      return
     }
     lastRequestController = new AbortController()
     const response = await fetch(`https://api.varnamproject.com/atl/ml/${word}`, {signal: lastRequestController.signal})
@@ -195,8 +196,8 @@ function genResultGrid() {
 }
 
 function shareResult() {
-  const tries = success ? currentRowIndex+1 : "X"
-  const text = `മwordle ${gameNo} ${tries}/6\n\n${genResultGrid()}`;
+  const tries = success ? currentRowIndex : "X"
+  const text = `മwordle ${gameNo} ${tries}/${board.length}\n\n${genResultGrid()}`;
   navigator.clipboard.writeText(text).then(() => {
     showMessage("Copied results to clipboard!", 2000)
   })
@@ -204,7 +205,7 @@ function shareResult() {
 
 function gameWon() {
   appreciationWord = ['Genius', 'Magnificent', 'Impressive', 'Splendid', 'Great', 'Phew'][
-    currentRowIndex
+    currentRowIndex-1
   ]
   success = true
   gameFinished()
@@ -244,6 +245,7 @@ function saveGame() {
 
 // Saved game state
 let gameState: GameState
+let gameStateRestore = $ref(false)
 
 function restoreGame() {
   gameState = JSON.parse(localStorage.getItem("gameState"))
@@ -254,20 +256,30 @@ function restoreGame() {
 
   transliteratedRows = gameState.transliteratedRows
   
-  while (currentRowIndex < gameState.currentRowIndex) {
-    for (let [columnIndex, tile] of currentRow.entries()) {
-      const savedRow = gameState.board[currentRowIndex][columnIndex]
-      tile.letter = savedRow.letter
-      tile.state = letterStates[tile.letter] = savedRow.state
+  gameStateRestore = true
+  allowInput = false
+
+  setTimeout(() => {
+    while (currentRowIndex < gameState.currentRowIndex) {
+      currentRow.forEach((tile, columnIndex) => {
+        const savedRow = gameState.board[currentRowIndex][columnIndex]
+        tile.letter = savedRow.letter
+        tile.state = letterStates[tile.letter] = savedRow.state
+      })
+      if (currentRow.every((tile) => tile.state === LetterState.CORRECT)) {
+        setTimeout(gameWon, 1000)
+      }
+      currentRowIndex++
     }
-    if (currentRow.every((tile) => tile.state === LetterState.CORRECT)) {
-      gameWon()
-    }
-    currentRowIndex++
-  }
-  if (currentRowIndex === board.length ) {
-    gameFinished()
-  }
+    setTimeout(() => {
+      gameStateRestore = false
+      allowInput = true
+
+      if (!success && currentRowIndex === board.length) {
+        gameFinished()
+      }
+    }, 1000)
+  }, 100)
 }
 
 if (localStorage.getItem("gameState")) {
@@ -320,7 +332,7 @@ if (localStorage.getItem("gameState")) {
         <div
           :class="['back', tile.state]"
           :style="{
-            transitionDelay: `${index * 300}ms`,
+            transitionDelay: `${index * (gameStateRestore ? 120 : 300)}ms`,
             animationDelay: `${index * 100}ms`
           }"
         >
