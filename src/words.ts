@@ -1,13 +1,15 @@
 const defaultMessage = ' Using word of the day instead.'
 
-export const gameStartDate = new Date(2022, 0, 26)
+export const hourOfNewMWordle = 22
+
+// January 25 2022, 10PM
+export const gameStartDate = new Date(2022, 0, 25, hourOfNewMWordle)
 
 // Thanks MaxVT
 // https://stackoverflow.com/a/2627493/1372424
 export function getGameNumber(firstDate: Date, secondDate: Date) {
   const now = new Date()
-  const start = new Date(2022, 0, 26)
-  const diff = Number(now) - Number(start)
+  const diff = Number(now) - Number(gameStartDate)
   let day = Math.floor(diff / (1000 * 60 * 60 * 24))
   while (day > answers.length) {
     day -= answers.length
@@ -36,20 +38,37 @@ export function getWordOfTheDay() {
   return answers[day]
 }
 
+/**************
+ * DO NOT
+ * READ
+ * FURTHER
+ * IF
+ * YOU
+ * DON'T
+ * WANT
+ * TO
+ * SEE
+ * ANSWERS 
+ **************/
+
+// Avoid words ending with 'u'
 const answers = [
-  'aalam',
+  'aalam', // 0. January 26, 2022
   'maram',
-  'varam',
   'panni',
-  'mazha',
   'palli',
+  'varam',
   'makan',
+  'mazha',
+  'vaava',
   'kinar',
   'kuzhi',
-  'mathil',
+  'mathil', // 10. February 5, 2022
   'kalam',
-  'mannu',
   'kanni',
+  'thiri',
+  'vaaka',
+  'kizhi',
 ]
 
 export const gameNo = getGameNumber(gameStartDate, new Date())

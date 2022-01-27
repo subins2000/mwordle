@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { onUnmounted } from 'vue'
-import { gameNo, getWordOfTheDay } from './words'
+import { gameNo, getWordOfTheDay, hourOfNewMWordle } from './words'
 import Keyboard from './Keyboard.vue'
 import { GameState, LetterState } from './types'
 import {startCountdown} from './utils'
@@ -220,7 +220,10 @@ const countdown = $ref({
 function gameFinished() {
   finished = true
   allowInput = false
-  countdownTimer = startCountdown(countdown)
+  const tomorrow = new Date();
+  tomorrow.setDate(tomorrow.getDate() + 1)
+  tomorrow.setHours(hourOfNewMWordle, 0, 0, 0);
+  countdownTimer = startCountdown(tomorrow, countdown)
 }
 
 function hideFinished() {
