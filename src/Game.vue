@@ -360,7 +360,7 @@ if (localStorage.getItem("gameState")) {
           </div>
           <div class="stat">
             <div class="number">{{gameStats.maxStreak}}</div>
-            Max Streak
+            Longest Streak
           </div>
         </div>
         <div>
@@ -451,9 +451,12 @@ if (localStorage.getItem("gameState")) {
   transform: translateX(-50%);
   transition: opacity 0.3s ease-out;
   font-weight: 600;
+  border: 2px solid #ccc;
 }
 .message {
   z-index: 100;
+  color: rgba(0, 0, 0, 0.85);
+  background-color: #fff;
 }
 .message.v-leave-to {
   opacity: 0;
