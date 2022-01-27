@@ -188,16 +188,16 @@ const icons = {
 
 function genResultGrid() {
   return board
-    .slice(0, currentRowIndex + 1)
+    .slice(0, currentRowIndex)
     .map((row) => {
       return row.map((tile) => icons[tile.state]).join('')
     })
     .join('\n')
 }
 
-function shareResult() {
+function shareResult(extraText = "") {
   const tries = success ? currentRowIndex : "X"
-  const text = `#മwordle ${gameNo} ${tries}/${board.length}\n\n${genResultGrid()}`;
+  const text = `#മwordle ${gameNo} ${tries}/${board.length}\n\n${genResultGrid()}${extraText}`;
   navigator.clipboard.writeText(text).then(() => {
     showMessage("Copied results to clipboard!", 2000)
   })
@@ -367,7 +367,12 @@ if (localStorage.getItem("gameState")) {
           New മwordle every 10PM
           <div id="timer">{{countdown.hours}}:{{countdown.minutes}}:{{countdown.seconds}}</div>
         </div>
-        <button @click="shareResult">SHARE</button>
+        <button @click="shareResult()">SHARE</button>
+        <button
+          id="shareWithLink"
+          @click="shareResult('\n\nPlay: https://mwordle.subinsb.com')">
+          SHARE With Link
+        </button>
       </div>
     </div>
   </Transition>
@@ -476,8 +481,10 @@ if (localStorage.getItem("gameState")) {
   font-size: 1.5rem;
 }
 #finished button {
-  padding: 10px 30px;
-  font-size: 1.2rem;
+  display: block;
+  margin: 5px auto;
+  padding: 15px 35px;
+  font-size: 1.3rem;
   font-weight: bold;
   letter-spacing: 1px;
   background: #6aaa64;
@@ -485,6 +492,14 @@ if (localStorage.getItem("gameState")) {
   border: 1px solid #000;
   border-radius: 5px;
   cursor: pointer;
+}
+#finished button:hover {
+  opacity: 0.95;
+}
+#finished #shareWithLink {
+  margin-top: 20px;
+  padding: 7px 25px;
+  font-size: 1rem;
 }
 #stats {
   display: flex;
