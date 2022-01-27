@@ -20,3 +20,12 @@ export interface GameState {
   transliteratedRows: string[],
   currentRowIndex: number
 }
+
+export interface GameStatsState {
+  lastGame: number|null,
+  gamesPlayed: number,
+  gamesWon: number,
+  currentStreak: number,
+  maxStreak: number,
+  winPositions: number[]
+}

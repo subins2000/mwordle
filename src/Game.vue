@@ -2,7 +2,7 @@
 import { onUnmounted } from 'vue'
 import { gameNo, getWordOfTheDay, hourOfNewMWordle } from './words'
 import Keyboard from './Keyboard.vue'
-import { GameState, LetterState } from './types'
+import { GameState, GameStatsState, LetterState } from './types'
 import {startCountdown} from './utils'
 
 // Get word of the day
@@ -197,10 +197,47 @@ function genResultGrid() {
 
 function shareResult() {
   const tries = success ? currentRowIndex : "X"
-  const text = `മwordle ${gameNo} ${tries}/${board.length}\n\n${genResultGrid()}`;
+  const text = `#മwordle ${gameNo} ${tries}/${board.length}\n\n${genResultGrid()}`;
   navigator.clipboard.writeText(text).then(() => {
     showMessage("Copied results to clipboard!", 2000)
   })
+}
+
+let gameStats: GameStatsState = {
+  lastGame: null,
+  gamesPlayed: 0,
+  gamesWon: 0,
+  currentStreak: 0,
+  maxStreak: 0,
+  winPositions: Array.from({length: 6}).fill(0)
+};
+
+function loadGameStats() {
+  if (localStorage.getItem("gameStats")) {
+    gameStats = JSON.parse(localStorage.getItem("gameStats"))
+  }
+}
+
+loadGameStats()
+
+function updateGameStats() {
+  if (gameStats.lastGame === gameNo) return
+
+  gameStats.gamesPlayed++
+  if (success) {
+    gameStats.gamesWon++
+    gameStats.winPositions[currentRowIndex-1]++
+    if (gameStats.lastGame !== gameNo - 1) {
+      gameStats.currentStreak = 1
+    } else {
+      gameStats.currentStreak++
+    }
+  } else {
+    gameStats.currentStreak = 0
+  }
+  gameStats.lastGame = gameNo
+  gameStats.maxStreak = Math.max(gameStats.currentStreak, gameStats.maxStreak)
+  localStorage.setItem("gameStats", JSON.stringify(gameStats))
 }
 
 function gameWon() {
@@ -218,12 +255,18 @@ const countdown = $ref({
   seconds: "00"
 })
 function gameFinished() {
+  updateGameStats()
   finished = true
   allowInput = false
-  const tomorrow = new Date();
-  tomorrow.setDate(tomorrow.getDate() + 1)
-  tomorrow.setHours(hourOfNewMWordle, 0, 0, 0);
-  countdownTimer = startCountdown(tomorrow, countdown)
+  const nextMWordleDate = new Date();
+  if (nextMWordleDate.getHours() >= 22) {
+    // Pick tomorrow if we're already past 10PM
+    nextMWordleDate.setDate(nextMWordleDate.getDate() + 1)
+  }
+  nextMWordleDate.setHours(hourOfNewMWordle, 0, 0, 0);
+  countdownTimer = startCountdown(nextMWordleDate, countdown, () => {
+    window.location.reload()
+  })
 }
 
 function hideFinished() {
@@ -302,8 +345,26 @@ if (localStorage.getItem("gameState")) {
         <h2 v-if="success">
           {{appreciationWord}}
         </h2>
+        <div id="stats">
+          <div class="stat">
+            <div class="number">{{gameStats.gamesPlayed}}</div>
+            Played
+          </div>
+          <div class="stat">
+            <div class="number">{{Math.round(gameStats.gamesWon / gameStats.gamesPlayed * 100, 0)}}</div>
+            Win %
+          </div>
+          <div class="stat">
+            <div class="number">{{gameStats.currentStreak}}</div>
+            Current Streak
+          </div>
+          <div class="stat">
+            <div class="number">{{gameStats.maxStreak}}</div>
+            Max Streak
+          </div>
+        </div>
         <div>
-          Next മwordle in
+          New മwordle every 10PM
           <div id="timer">{{countdown.hours}}:{{countdown.minutes}}:{{countdown.seconds}}</div>
         </div>
         <button @click="shareResult">SHARE</button>
@@ -400,6 +461,9 @@ if (localStorage.getItem("gameState")) {
 #finished {
   top: 25%;
   background-color: rgba(0, 0, 0, 0.85);
+  border: 4px solid #ccc;
+  border-radius: 20px;
+  box-shadow: 0px 26px 80px rgba(0, 0, 0, 0.2), 0px 0px 1px rgba(0, 0, 0, 0.2);
 }
 #finished h2 {
   margin-top: 0;
@@ -419,13 +483,29 @@ if (localStorage.getItem("gameState")) {
   border-radius: 5px;
   cursor: pointer;
 }
+#stats {
+  display: flex;
+  gap: 20px;
+  margin-bottom: 20px;
+}
+#stats .stat {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+  flex-basis: 25%;
+  font-size: 0.8rem;
+  text-align: center;
+}
+#stats .stat .number {
+  font-size: 1.8rem;
+}
 .overlay-bg {
   position: absolute;
   top: 0;
   bottom: 0;
   left: 0;
   right: 0;
-  background: rgba(255, 255, 255, 0.3);
+  background: rgba(0, 0, 0, 0.5);
   z-index: 20;
 }
 .row {
