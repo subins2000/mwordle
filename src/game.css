@@ -14,9 +14,34 @@ h1 {
 }
 
 header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  height: 50px;
   border-bottom: 1px solid #ccc;
-  margin-bottom: 30px;
+  margin-bottom: 10px;
   position: relative;
+}
+header .left, header .right {
+  z-index: 2;
+}
+.right {
+  float: right;
+  font-size: 1.3rem;
+}
+#brand {
+  position: absolute;
+  top: 4px;
+  left: 0;
+  right: 0;
+  text-align: center;
+  font-size: 2.3rem;
+}
+header a {
+  text-decoration: none;
+  color: #000;
+  cursor: pointer;
+  user-select: none;
 }
 
 #source-link {

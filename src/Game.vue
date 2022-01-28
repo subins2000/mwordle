@@ -27,7 +27,7 @@ let message = $ref('')
 let appreciationWord = $ref('')
 let shakeRowIndex = $ref(-1)
 let success = $ref(false)
-let finished = $ref(false)
+let isGameFinished = $ref(false)
 
 // Keep track of revealed letters for the virtual keyboard
 const letterStates: Record<string, LetterState> = $ref({})
@@ -140,7 +140,7 @@ function completeRow() {
     allowInput = false
     if (currentRow.every((tile) => tile.state === LetterState.CORRECT)) {
       // yay!
-      setInterval(gameWon, 1600)
+      setTimeout(gameWon, 1600)
     } else if (currentRowIndex < board.length - 1) {
       // go the next row
       setTimeout(() => {
@@ -248,6 +248,8 @@ function gameWon() {
   gameFinished()
 }
 
+let isStatsWindowOpen = $ref(false)
+
 let countdownTimer: number = $ref()
 const countdown = $ref({
   hours: "00",
@@ -256,7 +258,7 @@ const countdown = $ref({
 })
 function gameFinished() {
   updateGameStats()
-  finished = true
+  isGameFinished = true
   allowInput = false
   const nextMWordleDate = new Date();
   if (nextMWordleDate.getHours() >= 22) {
@@ -267,15 +269,12 @@ function gameFinished() {
   countdownTimer = startCountdown(nextMWordleDate, countdown, () => {
     window.location.reload()
   })
+  isStatsWindowOpen = true
 }
 
-function hideFinished() {
-  finished = false
-  clearInterval(countdownTimer)
-}
 document.addEventListener('keyup', function (evt) {
-  if (evt.keyCode === 27 && finished) {
-    hideFinished()
+  if (evt.keyCode === 27 && isStatsWindowOpen) {
+    isStatsWindowOpen = false
   }
 });
 
@@ -319,7 +318,10 @@ function restoreGame() {
     }
     setTimeout(() => {
       gameStateRestore = false
-      allowInput = true
+
+      if (!success) {
+        allowInput = true
+      }
 
       if (!success && currentRowIndex === board.length) {
         gameFinished()
@@ -335,34 +337,35 @@ if (localStorage.getItem("gameState")) {
 
 <template>
   <Transition>
-    <div class="message" v-if="message">
+    <div class="message" v-show="message">
       {{ message }}
     </div>
   </Transition>
-  <Transition>
-    <div class="overlay-bg" v-if="finished">
-      <div id="finished" v-click-outside="hideFinished">
-        <h2 v-if="success">
-          {{appreciationWord}}
-        </h2>
-        <div id="stats">
-          <div class="stat">
-            <div class="number">{{gameStats.gamesPlayed}}</div>
-            Played
-          </div>
-          <div class="stat">
-            <div class="number">{{Math.round(gameStats.gamesWon / gameStats.gamesPlayed * 100, 0)}}</div>
-            Win %
-          </div>
-          <div class="stat">
-            <div class="number">{{gameStats.currentStreak}}</div>
-            Current Streak
-          </div>
-          <div class="stat">
-            <div class="number">{{gameStats.maxStreak}}</div>
-            Longest Streak
-          </div>
+  <div v-if="isStatsWindowOpen">
+    <div class="overlay-bg" @click="isStatsWindowOpen = false"></div>
+    <div  class="message" id="statsWindow" :style="{ opacity: isStatsWindowOpen ? 1 : 0 }">
+      <h2 v-if="success">
+        {{appreciationWord}}
+      </h2>
+      <div id="stats">
+        <div class="stat">
+          <div class="number">{{gameStats.gamesPlayed}}</div>
+          Played
         </div>
+        <div class="stat">
+          <div class="number">{{Math.round(gameStats.gamesWon / gameStats.gamesPlayed * 100, 0) || 0}}</div>
+          Win %
+        </div>
+        <div class="stat">
+          <div class="number">{{gameStats.currentStreak}}</div>
+          Current Streak
+        </div>
+        <div class="stat">
+          <div class="number">{{gameStats.maxStreak}}</div>
+          Longest Streak
+        </div>
+      </div>
+      <div v-if="isGameFinished">
         <div>
           New മwordle every 10PM
           <div id="timer">{{countdown.hours}}:{{countdown.minutes}}:{{countdown.seconds}}</div>
@@ -375,9 +378,16 @@ if (localStorage.getItem("gameState")) {
         </button>
       </div>
     </div>
-  </Transition>
+  </div>
   <header>
-    <h1>മwordle {{gameNo}}</h1>
+    <div class="left">
+    </div>
+    <div id="brand">
+      <a href="https://mwordle.subinsb.com">മwordle</a> {{gameNo}}
+    </div>
+    <div class="right">
+      <a @click="isStatsWindowOpen = true">📊</a>
+    </div>
   </header>
   <div id="board">
     <div
@@ -444,7 +454,16 @@ if (localStorage.getItem("gameState")) {
   width: min(350px, calc(var(--height) / 6 * 5));
   margin: 0px auto;
 }
-.message, #finished {
+.overlay-bg {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  background: rgba(0, 0, 0, 0.5);
+  z-index: 19;
+}
+.message {
   position: absolute;
   left: 50%;
   top: 80px;
@@ -454,7 +473,7 @@ if (localStorage.getItem("gameState")) {
   z-index: 20;
   border-radius: 4px;
   transform: translateX(-50%);
-  transition: opacity 0.3s ease-out;
+  transition: oapcity 0.2s 1.5s;
   font-weight: 600;
   border: 2px solid #ccc;
 }
@@ -466,21 +485,22 @@ if (localStorage.getItem("gameState")) {
 .message.v-leave-to {
   opacity: 0;
 }
-#finished {
+#statsWindow {
   top: 25%;
+  color: #fff;
   background-color: rgba(0, 0, 0, 0.85);
   border: 4px solid #ccc;
   border-radius: 20px;
   box-shadow: 0px 26px 80px rgba(0, 0, 0, 0.2), 0px 0px 1px rgba(0, 0, 0, 0.2);
 }
-#finished h2 {
+#statsWindow h2 {
   margin-top: 0;
 }
-#finished #timer {
+#statsWindow #timer {
   margin: 20px 0;
   font-size: 1.5rem;
 }
-#finished button {
+#statsWindow button {
   display: block;
   margin: 5px auto;
   padding: 15px 35px;
@@ -493,10 +513,10 @@ if (localStorage.getItem("gameState")) {
   border-radius: 5px;
   cursor: pointer;
 }
-#finished button:hover {
+#statsWindow button:hover {
   opacity: 0.95;
 }
-#finished #shareWithLink {
+#statsWindow #shareWithLink {
   margin-top: 20px;
   padding: 7px 25px;
   font-size: 1rem;
@@ -516,15 +536,6 @@ if (localStorage.getItem("gameState")) {
 }
 #stats .stat .number {
   font-size: 1.8rem;
-}
-.overlay-bg {
-  position: absolute;
-  top: 0;
-  bottom: 0;
-  left: 0;
-  right: 0;
-  background: rgba(0, 0, 0, 0.5);
-  z-index: 20;
 }
 .row {
   display: grid;

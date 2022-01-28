@@ -3,7 +3,7 @@ import { Countdown } from "./types";
 // Thank you The KNVB (CC BY-SA 4.0)
 // https://stackoverflow.com/a/54257394/1372424
 export function startCountdown(target: Date, result: Countdown, onReach: Function) {
-  return setInterval(function() {
+  const updateTimer = () => {
     const toDate = new Date();
     let diffMS = target.getTime() / 1000 - toDate.getTime() / 1000;
     const diffHr = Math.floor(diffMS / 3600);
@@ -18,5 +18,7 @@ export function startCountdown(target: Date, result: Countdown, onReach: Functio
     if (result.hours === "00" && result.minutes === "00" && result.seconds === "00") {
       onReach()
     }
-  }, 1000);
+  }
+  updateTimer()
+  return setInterval(updateTimer, 1000);
 }
