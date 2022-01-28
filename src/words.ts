@@ -56,12 +56,12 @@ const answers = [
   'aalam', // 0. January 26, 2022
   'maram',
   'panni',
-  'palli',
-  'varam',
   'makan',
-  'mazha',
+  'lokam',
   'vaava',
+  'patti',
   'kinar',
+  'mazha',
   'kuzhi',
   'mathil', // 10. February 5, 2022
   'kalam',
