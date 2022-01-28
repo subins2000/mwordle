@@ -21,6 +21,7 @@ header {
   border-bottom: 1px solid #ccc;
   margin-bottom: 10px;
   position: relative;
+  padding: 0 20px;
 }
 header .left, header .right {
   z-index: 2;
