@@ -424,10 +424,10 @@ if (localStorage.getItem("gameState")) {
       <a @click="isHelpWindowOpen = true">Help</a>
     </div>
     <div id="brand">
-      <span @click="isAboutWindowOpen = true">
+      <a @click="isAboutWindowOpen = true">
         <span>മwordle</span>
         <span style="font-size: 1rem;margin-left: 5px;">{{gameNo}}</span>
-      </span>
+      </a>
     </div>
     <div class="right">
       <a @click="isStatsWindowOpen = true">📊</a>
