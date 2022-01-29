@@ -289,8 +289,8 @@ function gameFinished() {
 }
 
 document.addEventListener('keyup', function (evt) {
-  if (evt.keyCode === 27 && isStatsWindowOpen) {
-    isStatsWindowOpen = false
+  if (evt.keyCode === 27) { // Escape key
+    isStatsWindowOpen = isHelpWindowOpen = isAboutWindowOpen = false
   }
 });
 
