@@ -264,6 +264,7 @@ function gameWon() {
 
 let isStatsWindowOpen = $ref(false)
 let isHelpWindowOpen = $ref(false)
+let isAboutWindowOpen = $ref(false)
 
 let countdownTimer: number = $ref()
 const countdown = $ref({
@@ -357,8 +358,8 @@ if (localStorage.getItem("gameState")) {
     </div>
   </Transition>
   <div class="overlay-bg"
-    v-if="isStatsWindowOpen || isHelpWindowOpen"
-    @click="isStatsWindowOpen = isHelpWindowOpen = false">
+    v-if="isStatsWindowOpen || isHelpWindowOpen || isAboutWindowOpen"
+    @click="isStatsWindowOpen = isHelpWindowOpen = isAboutWindowOpen = false">
   </div>
   <div class="message" id="statsWindow" :style="{ opacity: isStatsWindowOpen ? 1 : 0 }">
     <h2 v-if="success">
@@ -409,13 +410,24 @@ if (localStorage.getItem("gameState")) {
     </div>
     <p>പുതിയ വാക്ക് എല്ലാ ദിവസവും രാത്രി പത്തുമണിക്ക്.</p>
   </div>
+  <div class="message" style="top: 50px;min-width: 300px;line-height: 1.5rem;" v-if="isAboutWindowOpen">
+    <h2>മലയാളം Wordle</h2>
+    <p>Game Number #{{gameNo}}</p>
+    <p><a href="https://www.powerlanguage.co.uk/wordle/" target="_blank">Original Wordle Game</a> created by<br/>Josh Wardle</p>
+    <p><a href="https://github.com/yyx990803/vue-wordle" target="_blank">Wordle in vue3</a> created by<br/> Evan You</p>
+    <p>Malayalam Wordle created by<br/><a href="https://twitter.com/SubinSiby">Subin Siby</a></p>
+    <p>Malayalam Transliteration powered by<br/><a href="https://varnamproject.com">Varnam Project</a></p>
+    <p>Email:<br/>projects അറ്റ് subinsb ഡോട്ട് com</p>
+  </div>
   <header>
     <div class="left">
       <a @click="isHelpWindowOpen = true">Help</a>
     </div>
     <div id="brand">
-      <a href="https://mwordle.subinsb.com">മwordle</a>
-      <span style="font-size: 1rem;margin-left: 5px;">{{gameNo}}</span>
+      <span @click="isAboutWindowOpen = true">
+        <span>മwordle</span>
+        <span style="font-size: 1rem;margin-left: 5px;">{{gameNo}}</span>
+      </span>
     </div>
     <div class="right">
       <a @click="isStatsWindowOpen = true">📊</a>
