@@ -106,7 +106,7 @@ function clearTile() {
 }
 
 async function showAnswer() {
-  const {exact_matches} = await transliterate(answer, null)
+  const {exact_matches} = await transliterate(`${answer}?finished`, null)
   showMessage(`${answer.toUpperCase()} - ${exact_matches[0].word}`, 6000)
 }
 
