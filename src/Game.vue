@@ -395,7 +395,7 @@ if (localStorage.getItem("gameState")) {
       </button>
     </div>
   </div>
-  <div class="message" style="padding: 2px 6px;" v-if="isHelpWindowOpen">
+  <div class="message" style="top: 50px; padding: 2px 6px;" v-if="isHelpWindowOpen">
     <h1>എങ്ങനെ കളിക്കാം</h1>
     <p>കളിയുടെ ലക്ഷ്യം ഒരു വാക്ക് കണ്ടുപിടിക്കലാണ്.</p>
     <p>ഒരു വാക്കടിച്ച് Enter കീ അമർത്തിയാൽ ഓരോ അക്ഷരത്തിന്മേലും പല നിറം വരും.</p>
@@ -407,6 +407,7 @@ if (localStorage.getItem("gameState")) {
         <li>ചാരനിറം - അക്ഷരം വാക്കിൽ ഇല്ലാ</li>
       </ul>
     </div>
+    <p>പുതിയ വാക്ക് എല്ലാ ദിവസവും രാത്രി പത്തുമണിക്ക്.</p>
   </div>
   <header>
     <div class="left">
