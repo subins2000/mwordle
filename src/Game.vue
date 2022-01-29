@@ -212,14 +212,38 @@ function genResultGrid() {
     .join('\n')
 }
 
-function shareResult(extraText = "") {
+async function shareResult(extraText = "") {
   // currentRowIndex is incremented after every row fill
   // So, if user is at last row, currentRowIndex = 6 = board.length
   const tries = success ? currentRowIndex : "X"
   const text = `#മwordle ${gameNo} ${tries}/${board.length}\n\n${genResultGrid()}${extraText}`;
-  navigator.clipboard.writeText(text).then(() => {
-    showMessage("Copied results to clipboard!", 2000)
-  })
+
+  // Best to assume share failed first
+  let shareFailed = true
+
+  try {
+    // canShare() & shareData.text support came together in browsers (Chrome 75).
+    // Firefox for Android doesn't support text data sharing
+    if (navigator.canShare) {
+      const shareData = {
+        text
+      }
+      if (navigator.canShare(shareData)) {
+        await navigator.share(shareData)
+        shareFailed = false
+      }
+    }
+  } catch (err) {
+    console.log(err)
+  }
+  try {
+    if (shareFailed) {
+      await navigator.clipboard.writeText(text)
+      showMessage("Copied results to clipboard!", 2000)
+    }
+  } catch(err) {
+    console.log(err)
+  }
 }
 
 let gameStats: GameStatsState = {
@@ -393,11 +417,11 @@ if (localStorage.getItem("gameState")) {
         New മwordle every 10PM
         <div id="timer">{{countdown.hours}}:{{countdown.minutes}}:{{countdown.seconds}}</div>
       </div>
-      <button @click="shareResult()">COPY RESULT</button>
+      <button @click="shareResult()">SHARE RESULT</button>
       <button
         id="shareWithLink"
         @click="shareResult('\n\nPlay: https://mwordle.subinsb.com')">
-        COPY RESULT With Link
+        SHARE RESULT With Link
       </button>
     </div>
   </div>
