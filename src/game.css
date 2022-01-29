@@ -17,8 +17,7 @@ header {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  height: 50px;
-  border-bottom: 1px solid #ccc;
+  height: 60px;
   margin-bottom: 10px;
   position: relative;
   padding: 0 20px;
@@ -32,7 +31,7 @@ header .left, header .right {
 }
 #brand {
   position: absolute;
-  top: 2px;
+  top: 5px;
   left: 0;
   right: 0;
   text-align: center;
@@ -45,10 +44,38 @@ header a {
   user-select: none;
 }
 
-#source-link {
-  position: absolute;
-  right: 1em;
-  top: 0.5em;
+/*
+// https://stackoverflow.com/a/34773398/1372424
+// Android Material Loading animation with pure css. 
+// Author: Stefano Ferrara http://androidpc.it/
+// Forked from https://codepen.io/chofoo/pen/Abril
+// Author: Simon Clavey https://simonclavey.co.uk/
+*/
+.progress .line {
+  position:absolute;
+  opacity: 0.4;
+  background:#4a8df8;
+  width:150%;
+  height:5px;
+}
+.progress .subline {
+  position:absolute;
+  background:#4a8df8;
+  height:5px; 
+}
+.progress .inc {
+  animation: increase 2s infinite;
+}
+.progress .dec {
+  animation: decrease 2s 0.5s infinite;
+}
+@keyframes increase {
+   from { left: -5%; width: 5%; }
+   to { left: 130%; width: 100%;}
+}
+@keyframes decrease {
+   from { left: -80%; width: 80%; }
+   to { left: 110%; width: 10%;}
 }
 
 .correct,

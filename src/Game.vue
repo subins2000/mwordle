@@ -51,8 +51,10 @@ onUnmounted(() => {
 })
 
 let transliterated = $ref("")
-let validWord = $ref(false)
 let transliteratedRows = $ref(Array(6).fill(""))
+
+let transliterationInProgress = $ref(false)
+let validWord = false
 
 let lastRequestController: AbortController;
 async function transliterateRow() {
@@ -66,6 +68,7 @@ async function transliterateRow() {
       transliteratedRows[currentRowIndex] = ""
       return
     }
+    transliterationInProgress = true
     lastRequestController = new AbortController()
     const {
       exact_matches,
@@ -74,6 +77,7 @@ async function transliterateRow() {
     } = await transliterate(word, lastRequestController.signal)
     transliteratedRows[currentRowIndex] = [...exact_matches, ...dictionary_suggestions, ...tokenizer_suggestions][0].word
     validWord = exact_matches.length > 0
+    transliterationInProgress = false
   } catch (e) {
     console.log(e)
   }
@@ -116,6 +120,7 @@ async function showAnswer() {
 }
 
 function completeRow() {
+  if (transliterationInProgress) return
   if (currentRow.every((tile) => tile.letter)) {
     const guess = currentRow.map((tile) => tile.letter).join('')
     if (!validWord && guess !== answer) {
@@ -390,64 +395,70 @@ if (localStorage.getItem("gameState")) {
     v-if="isStatsWindowOpen || isHelpWindowOpen || isAboutWindowOpen"
     @click="isStatsWindowOpen = isHelpWindowOpen = isAboutWindowOpen = false">
   </div>
-  <div class="message" id="statsWindow" :style="{ opacity: isStatsWindowOpen ? 1 : 0 }">
-    <h2 v-if="success">
-      {{appreciationWord}}
-    </h2>
-    <div id="stats">
-      <div class="stat">
-        <div class="number">{{gameStats.gamesPlayed}}</div>
-        Played
+  <Transition>
+    <div class="message" id="statsWindow" v-if="isStatsWindowOpen">
+      <h2 v-if="success">
+        {{appreciationWord}}
+      </h2>
+      <div id="stats">
+        <div class="stat">
+          <div class="number">{{gameStats.gamesPlayed}}</div>
+          Played
+        </div>
+        <div class="stat">
+          <div class="number">{{Math.round(gameStats.gamesWon / gameStats.gamesPlayed * 100, 0) || 0}}</div>
+          Win %
+        </div>
+        <div class="stat">
+          <div class="number">{{gameStats.currentStreak}}</div>
+          Current Streak
+        </div>
+        <div class="stat">
+          <div class="number">{{gameStats.maxStreak}}</div>
+          Longest Streak
+        </div>
       </div>
-      <div class="stat">
-        <div class="number">{{Math.round(gameStats.gamesWon / gameStats.gamesPlayed * 100, 0) || 0}}</div>
-        Win %
-      </div>
-      <div class="stat">
-        <div class="number">{{gameStats.currentStreak}}</div>
-        Current Streak
-      </div>
-      <div class="stat">
-        <div class="number">{{gameStats.maxStreak}}</div>
-        Longest Streak
+      <div v-if="isGameFinished">
+        <div>
+          New മwordle every 10PM
+          <div id="timer">{{countdown.hours}}:{{countdown.minutes}}:{{countdown.seconds}}</div>
+        </div>
+        <button @click="shareResult()">SHARE RESULT</button>
+        <button
+          id="shareWithLink"
+          @click="shareResult('\n\nPlay: https://mwordle.subinsb.com')">
+          SHARE RESULT With Link
+        </button>
       </div>
     </div>
-    <div v-if="isGameFinished">
-      <div>
-        New മwordle every 10PM
-        <div id="timer">{{countdown.hours}}:{{countdown.minutes}}:{{countdown.seconds}}</div>
+  </Transition>
+  <Transition>
+    <div class="message" style="top: 50px; padding: 2px 6px;" v-if="isHelpWindowOpen">
+      <h1>എങ്ങനെ കളിക്കാം</h1>
+      <p>കളിയുടെ ലക്ഷ്യം ഒരു വാക്ക് കണ്ടുപിടിക്കലാണ്.</p>
+      <p>ഒരു വാക്കടിച്ച് Enter കീ അമർത്തിയാൽ ഓരോ അക്ഷരത്തിന്മേലും പല നിറം വരും.</p>
+      <p><img src="https://mwordle.subinsb.com/static/help-block.png" style="min-width: 300px; max-width:100%" /></p>
+      <div style="text-align: left">
+        <ul>
+          <li>പച്ച - അക്ഷരവും അതിന്റെ സ്ഥാനവും ശരിയാണ്</li>
+          <li>മഞ്ഞ - ലക്ഷ്യവാക്കിൽ അക്ഷരം ഉണ്ട് പക്ഷേ സ്ഥാനം തെറ്റാണ്</li>
+          <li>ചാരനിറം - അക്ഷരം വാക്കിൽ ഇല്ലാ</li>
+        </ul>
       </div>
-      <button @click="shareResult()">SHARE RESULT</button>
-      <button
-        id="shareWithLink"
-        @click="shareResult('\n\nPlay: https://mwordle.subinsb.com')">
-        SHARE RESULT With Link
-      </button>
+      <p>പുതിയ വാക്ക് എല്ലാ ദിവസവും രാത്രി പത്തുമണിക്ക്.</p>
     </div>
-  </div>
-  <div class="message" style="top: 50px; padding: 2px 6px;" v-if="isHelpWindowOpen">
-    <h1>എങ്ങനെ കളിക്കാം</h1>
-    <p>കളിയുടെ ലക്ഷ്യം ഒരു വാക്ക് കണ്ടുപിടിക്കലാണ്.</p>
-    <p>ഒരു വാക്കടിച്ച് Enter കീ അമർത്തിയാൽ ഓരോ അക്ഷരത്തിന്മേലും പല നിറം വരും.</p>
-    <p><img src="https://mwordle.subinsb.com/static/help-block.png" style="min-width: 300px; max-width:100%" /></p>
-    <div style="text-align: left">
-      <ul>
-        <li>പച്ച - അക്ഷരവും അതിന്റെ സ്ഥാനവും ശരിയാണ്</li>
-        <li>മഞ്ഞ - ലക്ഷ്യവാക്കിൽ അക്ഷരം ഉണ്ട് പക്ഷേ സ്ഥാനം തെറ്റാണ്</li>
-        <li>ചാരനിറം - അക്ഷരം വാക്കിൽ ഇല്ലാ</li>
-      </ul>
+  </Transition>
+  <Transition>
+    <div class="message" style="top: 50px;min-width: 300px;line-height: 1.5rem;" v-if="isAboutWindowOpen">
+      <h2>മലയാളം Wordle</h2>
+      <p>Game Number #{{gameNo}}</p>
+      <p><a href="https://www.powerlanguage.co.uk/wordle/" target="_blank">Original Wordle Game</a> created by<br/>Josh Wardle</p>
+      <p><a href="https://github.com/yyx990803/vue-wordle" target="_blank">Wordle in vue3</a> created by<br/> Evan You</p>
+      <p>Malayalam Wordle created by<br/><a href="https://twitter.com/SubinSiby">Subin Siby</a></p>
+      <p>Malayalam Transliteration powered by<br/><a href="https://varnamproject.com">Varnam Project</a></p>
+      <p>Email:<br/>projects അറ്റ് subinsb ഡോട്ട് com</p>
     </div>
-    <p>പുതിയ വാക്ക് എല്ലാ ദിവസവും രാത്രി പത്തുമണിക്ക്.</p>
-  </div>
-  <div class="message" style="top: 50px;min-width: 300px;line-height: 1.5rem;" v-if="isAboutWindowOpen">
-    <h2>മലയാളം Wordle</h2>
-    <p>Game Number #{{gameNo}}</p>
-    <p><a href="https://www.powerlanguage.co.uk/wordle/" target="_blank">Original Wordle Game</a> created by<br/>Josh Wardle</p>
-    <p><a href="https://github.com/yyx990803/vue-wordle" target="_blank">Wordle in vue3</a> created by<br/> Evan You</p>
-    <p>Malayalam Wordle created by<br/><a href="https://twitter.com/SubinSiby">Subin Siby</a></p>
-    <p>Malayalam Transliteration powered by<br/><a href="https://varnamproject.com">Varnam Project</a></p>
-    <p>Email:<br/>projects അറ്റ് subinsb ഡോട്ട് com</p>
-  </div>
+  </Transition>
   <header>
     <div class="left">
       <a @click="isHelpWindowOpen = true">Help</a>
@@ -460,6 +471,25 @@ if (localStorage.getItem("gameState")) {
     </div>
     <div class="right">
       <a @click="isStatsWindowOpen = true">📊</a>
+    </div>
+    <div
+      class="progress"
+      :style="{
+        position: 'absolute',
+        bottom: 0,
+        left: 0,
+        right: 0,
+        width: '100%',
+        height: '7px',
+        overflow: 'hidden'
+      }"
+    >
+      <div v-if="transliterationInProgress">
+        <div class="line"></div>
+        <div class="subline inc"></div>
+        <div class="subline dec"></div>
+      </div>
+      <div v-else style="border-bottom: 5px solid #CCC;"></div>
     </div>
   </header>
   <div id="board">
