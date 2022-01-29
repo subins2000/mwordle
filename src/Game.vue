@@ -400,7 +400,7 @@ if (localStorage.getItem("gameState")) {
     <h1>എങ്ങനെ കളിക്കാം</h1>
     <p>കളിയുടെ ലക്ഷ്യം ഒരു വാക്ക് കണ്ടുപിടിക്കലാണ്.</p>
     <p>ഒരു വാക്കടിച്ച് Enter കീ അമർത്തിയാൽ ഓരോ അക്ഷരത്തിന്മേലും പല നിറം വരും.</p>
-    <p><img src="static/help-block.png" style="min-width: 300px; max-width:100%" /></p>
+    <p><img src="https://mwordle.subinsb.com/static/help-block.png" style="min-width: 300px; max-width:100%" /></p>
     <div style="text-align: left">
       <ul>
         <li>പച്ച - അക്ഷരവും അതിന്റെ സ്ഥാനവും ശരിയാണ്</li>
