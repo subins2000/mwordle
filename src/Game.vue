@@ -3,7 +3,7 @@ import { onUnmounted } from 'vue'
 import { gameNo, getWordOfTheDay, hourOfNewMWordle } from './words'
 import Keyboard from './Keyboard.vue'
 import { GameState, GameStatsState, LetterState } from './types'
-import {startCountdown} from './utils'
+import {startCountdown, transliterate} from './utils'
 
 // Get word of the day
 const answer = getWordOfTheDay()
@@ -17,6 +17,8 @@ const board = $ref(
     }))
   )
 )
+
+let lastFilledRowIndex = -1
 
 // Current active row.
 let currentRowIndex = $ref(0)
@@ -48,7 +50,7 @@ let validWord = $ref(false)
 let transliteratedRows = $ref(Array(6).fill(""))
 
 let lastRequestController: AbortController;
-async function transliterate() {
+async function transliterateRow() {
   const word = currentRow.map((tile) => tile.letter).join('')
   try {
     if (lastRequestController) {
@@ -60,8 +62,11 @@ async function transliterate() {
       return
     }
     lastRequestController = new AbortController()
-    const response = await fetch(`https://api.varnamproject.com/atl/ml/${word}`, {signal: lastRequestController.signal})
-    const {exact_matches, dictionary_suggestions, tokenizer_suggestions} = await response.json()
+    const {
+      exact_matches,
+      dictionary_suggestions,
+      tokenizer_suggestions
+    } = await transliterate(word, lastRequestController.signal)
     transliteratedRows[currentRowIndex] = [...exact_matches, ...dictionary_suggestions, ...tokenizer_suggestions][0].word
     validWord = exact_matches.length > 0
   } catch (e) {
@@ -84,7 +89,7 @@ function fillTile(letter: string) {
   for (const tile of currentRow) {
     if (!tile.letter) {
       tile.letter = letter
-      transliterate()
+      transliterateRow()
       break
     }
   }
@@ -94,10 +99,15 @@ function clearTile() {
   for (const tile of [...currentRow].reverse()) {
     if (tile.letter) {
       tile.letter = ''
-      transliterate()
+      transliterateRow()
       break
     }
   }
+}
+
+async function showAnswer() {
+  const {exact_matches} = await transliterate(answer, null)
+  showMessage(`${answer.toUpperCase()} - ${exact_matches[0].word}`, 6000)
 }
 
 function completeRow() {
@@ -108,6 +118,8 @@ function completeRow() {
       showMessage(`Not in word list`)
       return
     }
+
+    lastFilledRowIndex = currentRowIndex
 
     const answerLetters: (string | null)[] = answer.split('')
     // first pass: mark correct ones
@@ -148,11 +160,11 @@ function completeRow() {
       }, 1600)
     } else {
       // game over :(
-      setTimeout(() => {
-        showMessage(answer.toUpperCase(), 5000)
+      setTimeout(async () => {
         setTimeout(() => {
           gameFinished()
         }, 1600)
+        showAnswer()
       }, 1600)
     }
     currentRowIndex++
@@ -196,6 +208,8 @@ function genResultGrid() {
 }
 
 function shareResult(extraText = "") {
+  // currentRowIndex is incremented after every row fill
+  // So, if user is at last row, currentRowIndex = 6 = board.length
   const tries = success ? currentRowIndex : "X"
   const text = `#മwordle ${gameNo} ${tries}/${board.length}\n\n${genResultGrid()}${extraText}`;
   navigator.clipboard.writeText(text).then(() => {
@@ -226,7 +240,7 @@ function updateGameStats() {
   gameStats.gamesPlayed++
   if (success) {
     gameStats.gamesWon++
-    gameStats.winPositions[currentRowIndex-1]++
+    gameStats.winPositions[lastFilledRowIndex]++
     if (gameStats.lastGame !== gameNo - 1) {
       gameStats.currentStreak = 1
     } else {
@@ -242,7 +256,7 @@ function updateGameStats() {
 
 function gameWon() {
   appreciationWord = ['Genius', 'Magnificent', 'Impressive', 'Splendid', 'Great', 'Phew'][
-    currentRowIndex-1
+    lastFilledRowIndex
   ]
   success = true
   gameFinished()
@@ -370,11 +384,11 @@ if (localStorage.getItem("gameState")) {
           New മwordle every 10PM
           <div id="timer">{{countdown.hours}}:{{countdown.minutes}}:{{countdown.seconds}}</div>
         </div>
-        <button @click="shareResult()">SHARE</button>
+        <button @click="shareResult()">COPY RESULT</button>
         <button
           id="shareWithLink"
           @click="shareResult('\n\nPlay: https://mwordle.subinsb.com')">
-          SHARE With Link
+          COPY RESULT With Link
         </button>
       </div>
     </div>

@@ -22,3 +22,12 @@ export function startCountdown(target: Date, result: Countdown, onReach: Functio
   updateTimer()
   return setInterval(updateTimer, 1000);
 }
+
+// DON'T FORGET TO COMMENT LOCALHOST URL OUT
+// const serverURL = "http://localhost:8123"
+const serverURL = "https://api.varnamproject.com"
+
+export async function transliterate(input: string, signal: AbortSignal | null) {
+  const response = await fetch(`${serverURL}/atl/ml/${input}`, {signal})
+  return await response.json()
+}
