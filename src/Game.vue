@@ -40,6 +40,11 @@ let allowInput = true
 const onKeyup = (e: KeyboardEvent) => onKey(e.key)
 
 window.addEventListener('keyup', onKeyup)
+window.addEventListener('keydown', e => {
+  if (e.key === "Backspace") {
+    e.preventDefault()
+  }
+})
 
 onUnmounted(() => {
   window.removeEventListener('keyup', onKeyup)
