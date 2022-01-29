@@ -263,6 +263,7 @@ function gameWon() {
 }
 
 let isStatsWindowOpen = $ref(false)
+let isHelpWindowOpen = $ref(false)
 
 let countdownTimer: number = $ref()
 const countdown = $ref({
@@ -355,49 +356,65 @@ if (localStorage.getItem("gameState")) {
       {{ message }}
     </div>
   </Transition>
-  <div v-if="isStatsWindowOpen">
-    <div class="overlay-bg" @click="isStatsWindowOpen = false"></div>
-    <div  class="message" id="statsWindow" :style="{ opacity: isStatsWindowOpen ? 1 : 0 }">
-      <h2 v-if="success">
-        {{appreciationWord}}
-      </h2>
-      <div id="stats">
-        <div class="stat">
-          <div class="number">{{gameStats.gamesPlayed}}</div>
-          Played
-        </div>
-        <div class="stat">
-          <div class="number">{{Math.round(gameStats.gamesWon / gameStats.gamesPlayed * 100, 0) || 0}}</div>
-          Win %
-        </div>
-        <div class="stat">
-          <div class="number">{{gameStats.currentStreak}}</div>
-          Current Streak
-        </div>
-        <div class="stat">
-          <div class="number">{{gameStats.maxStreak}}</div>
-          Longest Streak
-        </div>
+  <div class="overlay-bg"
+    v-if="isStatsWindowOpen || isHelpWindowOpen"
+    @click="isStatsWindowOpen = isHelpWindowOpen = false">
+  </div>
+  <div class="message" id="statsWindow" :style="{ opacity: isStatsWindowOpen ? 1 : 0 }">
+    <h2 v-if="success">
+      {{appreciationWord}}
+    </h2>
+    <div id="stats">
+      <div class="stat">
+        <div class="number">{{gameStats.gamesPlayed}}</div>
+        Played
       </div>
-      <div v-if="isGameFinished">
-        <div>
-          New മwordle every 10PM
-          <div id="timer">{{countdown.hours}}:{{countdown.minutes}}:{{countdown.seconds}}</div>
-        </div>
-        <button @click="shareResult()">COPY RESULT</button>
-        <button
-          id="shareWithLink"
-          @click="shareResult('\n\nPlay: https://mwordle.subinsb.com')">
-          COPY RESULT With Link
-        </button>
+      <div class="stat">
+        <div class="number">{{Math.round(gameStats.gamesWon / gameStats.gamesPlayed * 100, 0) || 0}}</div>
+        Win %
       </div>
+      <div class="stat">
+        <div class="number">{{gameStats.currentStreak}}</div>
+        Current Streak
+      </div>
+      <div class="stat">
+        <div class="number">{{gameStats.maxStreak}}</div>
+        Longest Streak
+      </div>
+    </div>
+    <div v-if="isGameFinished">
+      <div>
+        New മwordle every 10PM
+        <div id="timer">{{countdown.hours}}:{{countdown.minutes}}:{{countdown.seconds}}</div>
+      </div>
+      <button @click="shareResult()">COPY RESULT</button>
+      <button
+        id="shareWithLink"
+        @click="shareResult('\n\nPlay: https://mwordle.subinsb.com')">
+        COPY RESULT With Link
+      </button>
+    </div>
+  </div>
+  <div class="message" style="padding: 2px 6px;" v-if="isHelpWindowOpen">
+    <h1>എങ്ങനെ കളിക്കാം</h1>
+    <p>കളിയുടെ ലക്ഷ്യം ഒരു വാക്ക് കണ്ടുപിടിക്കലാണ്.</p>
+    <p>ഒരു വാക്കടിച്ച് Enter കീ അമർത്തിയാൽ ഓരോ അക്ഷരത്തിന്മേലും പല നിറം വരും.</p>
+    <p><img src="static/help-block.png" style="min-width: 300px; max-width:100%" /></p>
+    <div style="text-align: left">
+      <ul>
+        <li>പച്ച - അക്ഷരവും അതിന്റെ സ്ഥാനവും ശരിയാണ്</li>
+        <li>മഞ്ഞ - ലക്ഷ്യവാക്കിൽ അക്ഷരം ഉണ്ട് പക്ഷേ സ്ഥാനം തെറ്റാണ്</li>
+        <li>ചാരനിറം - അക്ഷരം വാക്കിൽ ഇല്ലാ</li>
+      </ul>
     </div>
   </div>
   <header>
     <div class="left">
+      <a @click="isHelpWindowOpen = true">Help</a>
     </div>
     <div id="brand">
-      <a href="https://mwordle.subinsb.com">മwordle</a> {{gameNo}}
+      <a href="https://mwordle.subinsb.com">മwordle</a>
+      <span style="font-size: 1rem;margin-left: 5px;">{{gameNo}}</span>
     </div>
     <div class="right">
       <a @click="isStatsWindowOpen = true">📊</a>

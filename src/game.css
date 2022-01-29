@@ -32,7 +32,7 @@ header .left, header .right {
 }
 #brand {
   position: absolute;
-  top: 4px;
+  top: 2px;
   left: 0;
   right: 0;
   text-align: center;
