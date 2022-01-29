@@ -395,70 +395,64 @@ if (localStorage.getItem("gameState")) {
     v-if="isStatsWindowOpen || isHelpWindowOpen || isAboutWindowOpen"
     @click="isStatsWindowOpen = isHelpWindowOpen = isAboutWindowOpen = false">
   </div>
-  <Transition>
-    <div class="message" id="statsWindow" v-if="isStatsWindowOpen">
-      <h2 v-if="success">
-        {{appreciationWord}}
-      </h2>
-      <div id="stats">
-        <div class="stat">
-          <div class="number">{{gameStats.gamesPlayed}}</div>
-          Played
-        </div>
-        <div class="stat">
-          <div class="number">{{Math.round(gameStats.gamesWon / gameStats.gamesPlayed * 100, 0) || 0}}</div>
-          Win %
-        </div>
-        <div class="stat">
-          <div class="number">{{gameStats.currentStreak}}</div>
-          Current Streak
-        </div>
-        <div class="stat">
-          <div class="number">{{gameStats.maxStreak}}</div>
-          Longest Streak
-        </div>
+  <div class="message" id="statsWindow" v-if="isStatsWindowOpen">
+    <h2 v-if="success">
+      {{appreciationWord}}
+    </h2>
+    <div id="stats">
+      <div class="stat">
+        <div class="number">{{gameStats.gamesPlayed}}</div>
+        Played
       </div>
-      <div v-if="isGameFinished">
-        <div>
-          New മwordle every 10PM
-          <div id="timer">{{countdown.hours}}:{{countdown.minutes}}:{{countdown.seconds}}</div>
-        </div>
-        <button @click="shareResult()">SHARE RESULT</button>
-        <button
-          id="shareWithLink"
-          @click="shareResult('\n\nPlay: https://mwordle.subinsb.com')">
-          SHARE RESULT With Link
-        </button>
+      <div class="stat">
+        <div class="number">{{Math.round(gameStats.gamesWon / gameStats.gamesPlayed * 100, 0) || 0}}</div>
+        Win %
+      </div>
+      <div class="stat">
+        <div class="number">{{gameStats.currentStreak}}</div>
+        Current Streak
+      </div>
+      <div class="stat">
+        <div class="number">{{gameStats.maxStreak}}</div>
+        Longest Streak
       </div>
     </div>
-  </Transition>
-  <Transition>
-    <div class="message" style="top: 50px; padding: 2px 6px;" v-if="isHelpWindowOpen">
-      <h1>എങ്ങനെ കളിക്കാം</h1>
-      <p>കളിയുടെ ലക്ഷ്യം ഒരു വാക്ക് കണ്ടുപിടിക്കലാണ്.</p>
-      <p>ഒരു വാക്കടിച്ച് Enter കീ അമർത്തിയാൽ ഓരോ അക്ഷരത്തിന്മേലും പല നിറം വരും.</p>
-      <p><img src="https://mwordle.subinsb.com/static/help-block.png" style="min-width: 300px; max-width:100%" /></p>
-      <div style="text-align: left">
-        <ul>
-          <li>പച്ച - അക്ഷരവും അതിന്റെ സ്ഥാനവും ശരിയാണ്</li>
-          <li>മഞ്ഞ - ലക്ഷ്യവാക്കിൽ അക്ഷരം ഉണ്ട് പക്ഷേ സ്ഥാനം തെറ്റാണ്</li>
-          <li>ചാരനിറം - അക്ഷരം വാക്കിൽ ഇല്ലാ</li>
-        </ul>
+    <div v-if="isGameFinished">
+      <div>
+        New മwordle every 10PM
+        <div id="timer">{{countdown.hours}}:{{countdown.minutes}}:{{countdown.seconds}}</div>
       </div>
-      <p>പുതിയ വാക്ക് എല്ലാ ദിവസവും രാത്രി പത്തുമണിക്ക്.</p>
+      <button @click="shareResult()">SHARE RESULT</button>
+      <button
+        id="shareWithLink"
+        @click="shareResult('\n\nPlay: https://mwordle.subinsb.com')">
+        SHARE RESULT With Link
+      </button>
     </div>
-  </Transition>
-  <Transition>
-    <div class="message" style="top: 50px;min-width: 300px;line-height: 1.5rem;" v-if="isAboutWindowOpen">
-      <h2>മലയാളം Wordle</h2>
-      <p>Game Number #{{gameNo}}</p>
-      <p><a href="https://www.powerlanguage.co.uk/wordle/" target="_blank">Original Wordle Game</a> created by<br/>Josh Wardle</p>
-      <p><a href="https://github.com/yyx990803/vue-wordle" target="_blank">Wordle in vue3</a> created by<br/> Evan You</p>
-      <p>Malayalam Wordle created by<br/><a href="https://twitter.com/SubinSiby">Subin Siby</a></p>
-      <p>Malayalam Transliteration powered by<br/><a href="https://varnamproject.com">Varnam Project</a></p>
-      <p>Email:<br/>projects അറ്റ് subinsb ഡോട്ട് com</p>
+  </div>
+  <div class="message" style="top: 50px; padding: 2px 6px;" v-if="isHelpWindowOpen">
+    <h1>എങ്ങനെ കളിക്കാം</h1>
+    <p>കളിയുടെ ലക്ഷ്യം ഒരു വാക്ക് കണ്ടുപിടിക്കലാണ്.</p>
+    <p>ഒരു വാക്കടിച്ച് Enter കീ അമർത്തിയാൽ ഓരോ അക്ഷരത്തിന്മേലും പല നിറം വരും.</p>
+    <p><img src="https://mwordle.subinsb.com/static/help-block.png" style="min-width: 300px; max-width:100%" /></p>
+    <div style="text-align: left">
+      <ul>
+        <li>പച്ച - അക്ഷരവും അതിന്റെ സ്ഥാനവും ശരിയാണ്</li>
+        <li>മഞ്ഞ - ലക്ഷ്യവാക്കിൽ അക്ഷരം ഉണ്ട് പക്ഷേ സ്ഥാനം തെറ്റാണ്</li>
+        <li>ചാരനിറം - അക്ഷരം വാക്കിൽ ഇല്ലാ</li>
+      </ul>
     </div>
-  </Transition>
+    <p>പുതിയ വാക്ക് എല്ലാ ദിവസവും രാത്രി പത്തുമണിക്ക്.</p>
+  </div>
+  <div class="message" style="top: 50px;min-width: 300px;line-height: 1.5rem;" v-if="isAboutWindowOpen">
+    <h2>മലയാളം Wordle</h2>
+    <p>Game Number #{{gameNo}}</p>
+    <p><a href="https://www.powerlanguage.co.uk/wordle/" target="_blank">Original Wordle Game</a> created by<br/>Josh Wardle</p>
+    <p><a href="https://github.com/yyx990803/vue-wordle" target="_blank">Wordle in vue3</a> created by<br/> Evan You</p>
+    <p>Malayalam Wordle created by<br/><a href="https://twitter.com/SubinSiby">Subin Siby</a></p>
+    <p>Malayalam Transliteration powered by<br/><a href="https://varnamproject.com">Varnam Project</a></p>
+    <p>Email:<br/>projects അറ്റ് subinsb ഡോട്ട് com</p>
+  </div>
   <header>
     <div class="left">
       <a @click="isHelpWindowOpen = true">Help</a>
