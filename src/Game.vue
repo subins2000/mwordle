@@ -259,6 +259,7 @@ async function shareResult(extraText = "") {
       showMessage("Copied results to clipboard!", 2000)
     }
   } catch(err) {
+    showMessage("Share Failed. Try A Different Web Browser", 2000)
     console.log(err)
   }
 }
