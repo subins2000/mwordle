@@ -400,7 +400,7 @@ if (localStorage.getItem("gameState")) {
 
 <template>
   <Transition>
-    <div class="message" v-show="message">
+    <div class="message" id="message" v-show="message">
       {{ message }}
     </div>
   </Transition>
@@ -579,14 +579,14 @@ if (localStorage.getItem("gameState")) {
   color: #fff;
   background-color: rgba(0, 0, 0, 0.85);
   padding: 16px 20px;
-  z-index: 20;
   border-radius: 4px;
   transform: translateX(-50%);
   transition: oapcity 0.2s 1.5s;
   font-weight: 600;
   border: 2px solid #ccc;
+  z-index: 20;
 }
-.message {
+#message {
   z-index: 100;
   color: rgba(0, 0, 0, 0.85);
   background-color: #fff;
