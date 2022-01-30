@@ -67,9 +67,11 @@ const answers = [
   'mathil', // 10. February 5, 2022
   'kalam',
   'kanni',
+  'muyal',
   'thiri',
   'vaaka',
   'kizhi',
+  'melam',
   'lolan'
 ]
 

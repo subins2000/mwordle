@@ -250,8 +250,12 @@ async function shareResult(extraText = "") {
         shareFailed = false
       }
     }
-  } catch (err) {
+  } catch (err: DOMException | any) {
     console.log(err)
+    if (err.code === DOMException.ABORT_ERR) {
+      // User cancelled sharing, it's alright :)
+      shareFailed = false
+    }
   }
   try {
     if (shareFailed) {
