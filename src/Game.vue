@@ -120,6 +120,9 @@ async function showAnswer() {
   showMessage(`${answer.toUpperCase()} - ${exact_matches[0].word}`, 6000)
 }
 
+// DON'T FORGET TO COMMENT THIS
+// setInterval(() => showMessage("test test test test test"), 2000)
+
 function completeRow() {
   if (transliterationInProgress) return
   if (currentRow.every((tile) => tile.letter)) {
@@ -583,7 +586,7 @@ if (localStorage.getItem("gameState")) {
   opacity: 0;
 }
 #statsWindow {
-  top: 110px;
+  top: 130px;
   color: #fff;
   background-color: rgba(0, 0, 0, 0.85);
   border: 4px solid #ccc;
