@@ -221,6 +221,14 @@ function genResultGrid() {
     .join('\n')
 }
 
+function isASupportedBrowser() {
+  var ua = navigator.userAgent || navigator.vendor || window.opera;
+  return navigator.userAgent.indexOf("Firefox") === -1 &&
+    ua.indexOf("FBAN") === -1 &&
+    ua.indexOf("FBAV") === -1 &&
+    ua.indexOf('Instagram') === -1;
+}
+
 async function shareResult(extraText = "") {
   // currentRowIndex is incremented after every row fill
   // So, if user is at last row, currentRowIndex = 6 = board.length
@@ -233,7 +241,7 @@ async function shareResult(extraText = "") {
   try {
     // canShare() & shareData.text support came together in browsers (Chrome 75).
     // Firefox for Android doesn't support text data sharing
-    if (navigator.canShare && navigator.userAgent.indexOf("Firefox") === 0) {
+    if (navigator.canShare && isASupportedBrowser()) {
       const shareData = {
         text
       }
