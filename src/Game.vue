@@ -66,6 +66,7 @@ async function transliterateRow() {
     }
     if (word === "") {
       transliteratedRows[currentRowIndex] = ""
+      transliterationInProgress = false
       return
     }
     transliterationInProgress = true
@@ -229,7 +230,7 @@ async function shareResult(extraText = "") {
   try {
     // canShare() & shareData.text support came together in browsers (Chrome 75).
     // Firefox for Android doesn't support text data sharing
-    if (navigator.canShare) {
+    if (navigator.canShare && navigator.userAgent.indexOf("Firefox") === 0) {
       const shareData = {
         text
       }
@@ -426,7 +427,7 @@ if (localStorage.getItem("gameState")) {
       <button
         id="shareWithLink"
         @click="shareResult('\n\nPlay: https://mwordle.subinsb.com')">
-        SHARE RESULT With Link
+        SHARE With Link
       </button>
     </div>
   </div>
@@ -533,7 +534,6 @@ if (localStorage.getItem("gameState")) {
   right: 0;
   left: 0;
   text-align: center;
-  padding: 2px 0 0;
   background: rgba(0, 0, 0, 0.5);
   color: #fff;
   z-index: 10;
@@ -546,7 +546,7 @@ if (localStorage.getItem("gameState")) {
   grid-gap: 5px;
   padding: 10px;
   box-sizing: border-box;
-  --height: min(420px, calc(var(--vh, 100vh) - 310px));
+  --height: min(420px, calc(var(--vh, 100vh) - 290px));
   height: var(--height);
   width: min(350px, calc(var(--height) / 6 * 5));
   margin: 0px auto;
@@ -563,7 +563,7 @@ if (localStorage.getItem("gameState")) {
 .message {
   position: absolute;
   left: 50%;
-  top: 80px;
+  top: 50px;
   color: #fff;
   background-color: rgba(0, 0, 0, 0.85);
   padding: 16px 20px;
@@ -583,7 +583,7 @@ if (localStorage.getItem("gameState")) {
   opacity: 0;
 }
 #statsWindow {
-  top: 25%;
+  top: 110px;
   color: #fff;
   background-color: rgba(0, 0, 0, 0.85);
   border: 4px solid #ccc;
@@ -600,7 +600,7 @@ if (localStorage.getItem("gameState")) {
 #statsWindow button {
   display: block;
   margin: 5px auto;
-  padding: 15px 35px;
+  padding: 15px 20px;
   font-size: 1.3rem;
   font-weight: bold;
   letter-spacing: 1px;

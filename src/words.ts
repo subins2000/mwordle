@@ -58,10 +58,11 @@ const answers = [
   'panni',
   'makan',
   'lokam',
+  'mlaav',
   'vaava',
+  'mazha',
   'patti',
   'kinar',
-  'mazha',
   'kuzhi',
   'mathil', // 10. February 5, 2022
   'kalam',
@@ -69,6 +70,7 @@ const answers = [
   'thiri',
   'vaaka',
   'kizhi',
+  'lolan'
 ]
 
 export const gameNo = getGameNumber(gameStartDate, new Date())
