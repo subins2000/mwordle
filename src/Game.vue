@@ -580,8 +580,8 @@ if (localStorage.getItem("gameState")) {
   position: absolute;
   left: 50%;
   top: 50px;
-  color: #fff;
-  background-color: rgba(0, 0, 0, 0.85);
+  color: rgba(0, 0, 0, 0.85);
+  background-color: #fff;
   padding: 16px 20px;
   border-radius: 4px;
   transform: translateX(-50%);
@@ -592,8 +592,6 @@ if (localStorage.getItem("gameState")) {
 }
 #message {
   z-index: 100;
-  color: rgba(0, 0, 0, 0.85);
-  background-color: #fff;
 }
 .message.v-leave-to {
   opacity: 0;
