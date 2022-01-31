@@ -29,7 +29,7 @@ export const nextMWordleDate = () => {
 
 // Thanks MaxVT
 // https://stackoverflow.com/a/2627493/1372424
-export function getGameNumber(firstDate: Date, secondDate: Date) {
+export function getGameNumber() {
   const now = new Date()
   const diff = Number(now) - Number(gameStartDate)
   let day = Math.floor(diff / (1000 * 60 * 60 * 24))
@@ -84,4 +84,4 @@ const answers = [
   'lolan'
 ]
 
-export const gameNo = getGameNumber(gameStartDate, new Date())
+export const gameNo = getGameNumber()
