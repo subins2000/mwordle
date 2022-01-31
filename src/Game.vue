@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { onUnmounted } from 'vue'
-import { gameNo, getWordOfTheDay, hourOfNewMWordle } from './words'
+import { gameNo, getWordOfTheDay, nextMWordleDate, isIndianTimeZone } from './words'
 import Keyboard from './Keyboard.vue'
 import { GameState, GameStatsState, LetterState } from './types'
 import {startCountdown, transliterate} from './utils'
@@ -317,7 +317,7 @@ let isStatsWindowOpen = $ref(false)
 let isHelpWindowOpen = $ref(false)
 let isAboutWindowOpen = $ref(false)
 
-let countdownTimer: number = $ref()
+let countdownTimer: number
 const countdown = $ref({
   hours: "00",
   minutes: "00",
@@ -327,13 +327,7 @@ function gameFinished() {
   updateGameStats()
   isGameFinished = true
   allowInput = false
-  const nextMWordleDate = new Date();
-  if (nextMWordleDate.getHours() >= 22) {
-    // Pick tomorrow if we're already past 10PM
-    nextMWordleDate.setDate(nextMWordleDate.getDate() + 1)
-  }
-  nextMWordleDate.setHours(hourOfNewMWordle, 0, 0, 0);
-  countdownTimer = startCountdown(nextMWordleDate, countdown, () => {
+  countdownTimer = startCountdown(nextMWordleDate(), countdown, () => {
     window.location.reload()
   })
   isStatsWindowOpen = true
@@ -436,8 +430,8 @@ if (localStorage.getItem("gameState")) {
     </div>
     <div v-if="isGameFinished">
       <div>
-        New മwordle every 10PM
-        <div id="timer">{{countdown.hours}}:{{countdown.minutes}}:{{countdown.seconds}}</div>
+        New മwordle every 10PM IST
+        <div id="timer">{{countdown.hours}}:{{countdown.minutes}}:{{countdown.seconds}}<span v-if="!isIndianTimeZone">*</span></div>
       </div>
       <button @click="shareResult()">SHARE RESULT</button>
       <button
@@ -445,6 +439,7 @@ if (localStorage.getItem("gameState")) {
         @click="shareResult('\n\nPlay: https://mwordle.subinsb.com')">
         SHARE With Link
       </button>
+      <p style="font-size: 0.8rem" v-if="!isIndianTimeZone">* {{nextMWordleDate().toLocaleString('en-GB', { weekday: "short", hour: 'numeric', hour12: true, timeZoneName: "long" })}}</p>
     </div>
   </div>
   <div class="message" style="top: 50px; padding: 2px 6px;" v-if="isHelpWindowOpen">
