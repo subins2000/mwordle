@@ -439,7 +439,7 @@ if (localStorage.getItem("gameState")) {
         @click="shareResult('\n\nPlay: https://mwordle.subinsb.com')">
         SHARE With Link
       </button>
-      <p style="font-size: 0.8rem" v-if="!isIndianTimeZone">* {{nextMWordleDate().toLocaleString('en-GB', { weekday: "short", hour: 'numeric', hour12: true, timeZoneName: "long" })}}</p>
+      <p style="font-size: 0.8rem" v-if="!isIndianTimeZone">* {{nextMWordleDate().toLocaleString('en-GB', { weekday: "short", hour: 'numeric', minute: 'numeric', hour12: true, timeZoneName: "long" })}}</p>
     </div>
   </div>
   <div class="message" style="top: 50px; padding: 2px 6px;" v-if="isHelpWindowOpen">
