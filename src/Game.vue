@@ -226,7 +226,8 @@ function isASupportedBrowser() {
   return navigator.userAgent.indexOf("Firefox") === -1 &&
     ua.indexOf("FBAN") === -1 &&
     ua.indexOf("FBAV") === -1 &&
-    ua.indexOf('Instagram') === -1;
+    ua.indexOf("Instagram") === -1 &&
+    ua.indexOf("Windows") === -1;
 }
 
 async function shareResult(extraText = "") {
