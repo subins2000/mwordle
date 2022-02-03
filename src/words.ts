@@ -39,14 +39,6 @@ export function getGameNumber() {
   return day
 }
 
-export function getWordOfTheDay() {
-  let day = gameNo
-  while (day > answers.length) {
-    day -= answers.length
-  }
-  return answers[day]
-}
-
 /**************
  * DO NOT
  * READ
@@ -61,7 +53,7 @@ export function getWordOfTheDay() {
  **************/
 
 // Avoid words ending with 'u'
-const answers = [
+export const answers = [
   'aalam', // 0. January 26, 2022
   'maram',
   'panni',
@@ -72,12 +64,12 @@ const answers = [
   'mazha',
   'kinar',
   'kuzhi',
-  'mathil', // 10. February 5, 2022
-  'kalam',
-  'kanni',
-  'patti',
   'muyal',
-  'thiri',
+  'thiri', // 10. February 5, 2022
+  'patti',
+  'mathi',
+  // 'kalam',
+  'kanni',
   'vaaka',
   'kizhi',
   'melam',
