@@ -72,12 +72,18 @@ async function transliterateRow() {
     transliterationInProgress = true
     lastRequestController = new AbortController()
     const {
+      exact_words,
       exact_matches,
       dictionary_suggestions,
       tokenizer_suggestions
     } = await transliterate(word, lastRequestController.signal)
-    transliteratedRows[currentRowIndex] = [...exact_matches, ...dictionary_suggestions, ...tokenizer_suggestions][0].word
-    validWord = exact_matches.length > 0
+    transliteratedRows[currentRowIndex] = [
+      ...exact_words,
+      ...exact_matches,
+      ...dictionary_suggestions,
+      ...tokenizer_suggestions
+    ][0].word
+    validWord = exact_words.length > 0
     transliterationInProgress = false
   } catch (e) {
     console.log(e)
@@ -116,8 +122,8 @@ function clearTile() {
 }
 
 async function showAnswer() {
-  const {exact_matches} = await transliterate(`${answer}?finished`, null)
-  showMessage(`${answer.toUpperCase()} - ${exact_matches[0].word}`, 6000)
+  const {exact_words} = await transliterate(`${answer}?finished`, null)
+  showMessage(`${answer.toUpperCase()} - ${exact_words[0].word}`, 6000)
 }
 
 // DON'T FORGET TO COMMENT THIS
