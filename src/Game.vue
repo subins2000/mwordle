@@ -78,6 +78,8 @@ async function transliterateRow() {
       tokenizer_suggestions
     } = await transliterate(word, lastRequestController.signal)
     transliteratedRows[currentRowIndex] = [
+      // Show all exact words :
+      // ...(exact_words.length === 0 ? [] : [{word: exact_words.map(item => item.word).join(", ")}]),
       ...exact_words,
       ...exact_matches,
       ...dictionary_suggestions,
@@ -552,7 +554,7 @@ if (localStorage.getItem("gameState")) {
   right: 0;
   left: 0;
   text-align: center;
-  background: rgba(0, 0, 0, 0.5);
+  background: rgba(0, 0, 0, 0.7);
   color: #fff;
   z-index: 10;
   font-weight: bold;
@@ -601,7 +603,7 @@ if (localStorage.getItem("gameState")) {
 #statsWindow {
   top: 130px;
   color: #fff;
-  background-color: rgba(0, 0, 0, 0.85);
+  background-color: rgba(0, 0, 0, 1);
   border: 4px solid #ccc;
   border-radius: 20px;
   box-shadow: 0px 26px 80px rgba(0, 0, 0, 0.2), 0px 0px 1px rgba(0, 0, 0, 0.2);
