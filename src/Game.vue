@@ -77,16 +77,17 @@ async function transliterateRow() {
       tokenizer_suggestions,
       greedy_tokenized
     } = await transliterate(word, lastRequestController.signal)
+    const greedyWords = greedy_tokenized.map(item => item.word)
     const combined = [
       // Show all exact words :
       // ...(exact_words.length === 0 ? [] : [{word: exact_words.map(item => item.word).join(", ")}]),
       ...exact_words.map(item => item.word),
       ...exact_matches.map(item => item.word),
-      ...greedy_tokenized.map(item => item.word)
+      ...greedyWords
     ]
 
     if (word.length >= 4) {
-      transliteratedRows[currentRowIndex] = combined[0]
+      transliteratedRows[currentRowIndex] = [...new Set([combined[0], ...greedyWords])].join(", ")
     } else {
       transliteratedRows[currentRowIndex] = [...new Set(combined)].join(", ")
     }
@@ -377,6 +378,7 @@ function restoreGame() {
   try {
     gameState = JSON.parse(localStorage.getItem("gameState"))
   } catch (e) {
+    console.log(e)
     localStorage.removeItem("gameState")
     return
   }
