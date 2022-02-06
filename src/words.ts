@@ -65,9 +65,8 @@ export const answers = [
   'kinar',
   'kuzhi',
   'muyal',
-  'thiri', // 10. February 5, 2022
+  'thiri', // 11. February 5, 2022
   'petti',
-  'mathi',
   'kanni',
   'vaaka',
   'kizhi',

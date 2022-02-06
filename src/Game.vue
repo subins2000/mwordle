@@ -131,6 +131,36 @@ async function showAnswer() {
 // DON'T FORGET TO COMMENT THIS
 // setInterval(() => showMessage("test test test test test"), 2000)
 
+function validateRowTiles(expected: string) {
+  const expectedLetters: (string | null)[] = expected.split('')
+  // first pass: mark correct ones
+  currentRow.forEach((tile, i) => {
+    if (expectedLetters[i] === tile.letter) {
+      tile.state = letterStates[tile.letter] = LetterState.CORRECT
+      expectedLetters[i] = null
+    }
+  })
+  // second pass: mark the present
+  currentRow.forEach((tile) => {
+    if (!tile.state && expectedLetters.includes(tile.letter)) {
+      tile.state = LetterState.PRESENT
+      expectedLetters[expectedLetters.indexOf(tile.letter)] = null
+      if (!letterStates[tile.letter]) {
+        letterStates[tile.letter] = LetterState.PRESENT
+      }
+    }
+  })
+  // 3rd pass: mark absent
+  currentRow.forEach((tile) => {
+    if (!tile.state) {
+      tile.state = LetterState.ABSENT
+      if (!letterStates[tile.letter]) {
+        letterStates[tile.letter] = LetterState.ABSENT
+      }
+    }
+  })
+}
+
 function completeRow() {
   if (transliterationInProgress) return
   if (currentRow.every((tile) => tile.letter)) {
@@ -143,33 +173,7 @@ function completeRow() {
 
     lastFilledRowIndex = currentRowIndex
 
-    const answerLetters: (string | null)[] = answer.split('')
-    // first pass: mark correct ones
-    currentRow.forEach((tile, i) => {
-      if (answerLetters[i] === tile.letter) {
-        tile.state = letterStates[tile.letter] = LetterState.CORRECT
-        answerLetters[i] = null
-      }
-    })
-    // second pass: mark the present
-    currentRow.forEach((tile) => {
-      if (!tile.state && answerLetters.includes(tile.letter)) {
-        tile.state = LetterState.PRESENT
-        answerLetters[answerLetters.indexOf(tile.letter)] = null
-        if (!letterStates[tile.letter]) {
-          letterStates[tile.letter] = LetterState.PRESENT
-        }
-      }
-    })
-    // 3rd pass: mark absent
-    currentRow.forEach((tile) => {
-      if (!tile.state) {
-        tile.state = LetterState.ABSENT
-        if (!letterStates[tile.letter]) {
-          letterStates[tile.letter] = LetterState.ABSENT
-        }
-      }
-    })
+    validateRowTiles(answer)
 
     allowInput = false
     if (currentRow.every((tile) => tile.state === LetterState.CORRECT)) {
@@ -359,18 +363,23 @@ function saveGame() {
 }
 
 // Saved game state
-let gameState: GameState
 let gameStateRestore = $ref(false)
 
 function restoreGame() {
-  gameState = JSON.parse(localStorage.getItem("gameState"))
-  if (gameState.gameNo !== gameNo) {
+  let gameState: GameState
+  try {
+    gameState = JSON.parse(localStorage.getItem("gameState"))
+  } catch (e) {
+    localStorage.removeItem("gameState")
+    return
+  }
+  if (gameState && gameState.gameNo !== gameNo) {
     localStorage.removeItem("gameState")
     return
   }
 
   transliteratedRows = gameState.transliteratedRows
-  
+
   gameStateRestore = true
   allowInput = false
 
@@ -379,8 +388,8 @@ function restoreGame() {
       currentRow.forEach((tile, columnIndex) => {
         const savedRow = gameState.board[currentRowIndex][columnIndex]
         tile.letter = savedRow.letter
-        tile.state = letterStates[tile.letter] = savedRow.state
       })
+      validateRowTiles(answer)
       if (currentRow.every((tile) => tile.state === LetterState.CORRECT)) {
         setTimeout(gameWon, 1000)
       }
