@@ -74,18 +74,25 @@ async function transliterateRow() {
     const {
       exact_words,
       exact_matches,
-      dictionary_suggestions,
-      tokenizer_suggestions
+      tokenizer_suggestions,
+      greedy_tokenized
     } = await transliterate(word, lastRequestController.signal)
-    transliteratedRows[currentRowIndex] = [
+    const combined = [
       // Show all exact words :
       // ...(exact_words.length === 0 ? [] : [{word: exact_words.map(item => item.word).join(", ")}]),
-      ...exact_words,
-      ...exact_matches,
-      ...dictionary_suggestions,
-      ...tokenizer_suggestions
-    ][0].word
+      ...exact_words.map(item => item.word),
+      ...exact_matches.map(item => item.word),
+      ...greedy_tokenized.map(item => item.word)
+    ]
+
+    if (word.length >= 4) {
+      transliteratedRows[currentRowIndex] = combined[0]
+    } else {
+      transliteratedRows[currentRowIndex] = [...new Set(combined)].join(", ")
+    }
+
     validWord = exact_words.length > 0
+
     transliterationInProgress = false
   } catch (e) {
     console.log(e)

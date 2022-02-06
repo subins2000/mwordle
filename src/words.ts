@@ -148,7 +148,8 @@ export const answers = [
   'soura',
   'thekk',
   'jayam',
-  'chiri'
+  'chiri',
+  'poyka'
 ]
 
 export const gameNo = getGameNumber()
