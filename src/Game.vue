@@ -480,7 +480,7 @@ if (localStorage.getItem("gameState")) {
       </button>
       <p style="font-size: 0.8rem">
         <span v-if="isIndianTimeZone">
-          ഏലാ ദിവസവും രാത്രി 10 മണിക്ക് പുതിയ വാക്ക്
+          എല്ലാ ദിവസവും രാത്രി 10 മണിക്ക് പുതിയ വാക്ക്
         </span>
         <span v-else>
           * {{nextMWordleDate().toLocaleString('en-GB', { weekday: "short", hour: 'numeric', minute: 'numeric', hour12: true, timeZoneName: "long" })}}
