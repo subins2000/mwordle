@@ -18,7 +18,7 @@ const board = $ref(
   )
 )
 
-let lastFilledRowIndex = -1
+let lastFilledRowIndex = $ref(-1)
 
 // Current active row.
 let currentRowIndex = $ref(0)
@@ -167,6 +167,8 @@ function validateRowTiles(expected: string) {
       }
     }
   })
+
+  lastFilledRowIndex = currentRowIndex
 }
 
 function completeRow() {
@@ -178,8 +180,6 @@ function completeRow() {
       showMessage(`Not in word list`)
       return
     }
-
-    lastFilledRowIndex = currentRowIndex
 
     validateRowTiles(answer)
 
@@ -455,9 +455,21 @@ if (localStorage.getItem("gameState")) {
         Longest Streak
       </div>
     </div>
+    <div id="guessDistributions" style="text-align: left;display: flex;flex-direction: column;gap: 2px;">
+      <div
+      v-for="(gamesWon, index) in gameStats.winPositions" style="display: flex;gap: 8px;">
+        <span>{{index+1}}</span>
+        <div :style="{
+            background: index === lastFilledRowIndex ? '#6aaa64' : '#777',
+            width: `calc(${(gamesWon/Math.max(...gameStats.winPositions))*100}% + 12px)`,
+            textAlign: gamesWon > 0 ? 'right' : 'center',
+            color: '#fff',
+            padding: '0 6px',
+          }">{{gamesWon}}</div>
+      </div>
+    </div>
     <div v-if="isGameFinished">
       <div>
-        New മwordle every 10PM IST
         <div id="timer">{{countdown.hours}}:{{countdown.minutes}}:{{countdown.seconds}}<span v-if="!isIndianTimeZone">*</span></div>
       </div>
       <button @click="shareResult()">SHARE RESULT</button>
@@ -466,7 +478,14 @@ if (localStorage.getItem("gameState")) {
         @click="shareResult('\n\nPlay: https://mwordle.subinsb.com')">
         SHARE With Link
       </button>
-      <p style="font-size: 0.8rem" v-if="!isIndianTimeZone">* {{nextMWordleDate().toLocaleString('en-GB', { weekday: "short", hour: 'numeric', minute: 'numeric', hour12: true, timeZoneName: "long" })}}</p>
+      <p style="font-size: 0.8rem">
+        <span v-if="isIndianTimeZone">
+          ഏലാ ദിവസവും രാത്രി 10 മണിക്ക് പുതിയ വാക്ക്
+        </span>
+        <span v-else>
+          * {{nextMWordleDate().toLocaleString('en-GB', { weekday: "short", hour: 'numeric', minute: 'numeric', hour12: true, timeZoneName: "long" })}}
+        </span>
+      </p>
     </div>
   </div>
   <div class="message" style="top: 50px; padding: 2px 6px;" v-if="isHelpWindowOpen">
@@ -619,7 +638,7 @@ if (localStorage.getItem("gameState")) {
   opacity: 0;
 }
 #statsWindow {
-  top: 130px;
+  top: 40px;
   color: #fff;
   background-color: rgba(0, 0, 0, 1);
   border: 4px solid #ccc;

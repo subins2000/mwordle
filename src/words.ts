@@ -72,14 +72,14 @@ export const answers = [
   'kizhi',
   'melam',
   'lolan',
-  'pavan',
+  'pavan', // 18. February 12, 2022
   'anali',
+  'oppam',
   'madhu',
-  'chila',
   'vazhi',
   'jilla',
-  'dveep',
-  'jalam',
+  'dveep', 
+  'jalam', // 25. February 19, 2022
   'sabha',
   'thala',
   'vidya',
