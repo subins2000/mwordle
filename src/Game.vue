@@ -460,7 +460,7 @@ if (localStorage.getItem("gameState")) {
       v-for="(gamesWon, index) in gameStats.winPositions" style="display: flex;gap: 8px;">
         <span>{{index+1}}</span>
         <div :style="{
-            background: index === lastFilledRowIndex ? '#6aaa64' : '#777',
+            background: success && index === lastFilledRowIndex ? '#6aaa64' : '#777',
             width: `calc(${(gamesWon/Math.max(...gameStats.winPositions))*100}% + 12px)`,
             textAlign: gamesWon > 0 ? 'right' : 'center',
             color: '#fff',
