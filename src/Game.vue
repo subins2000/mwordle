@@ -523,6 +523,7 @@ if (localStorage.getItem("gameState")) {
       </a>
     </div>
     <div class="right">
+      <a @click="isAboutWindowOpen = true" style="margin-right:10px;">ℹ️</a>
       <a @click="isStatsWindowOpen = true">📊</a>
     </div>
     <div
