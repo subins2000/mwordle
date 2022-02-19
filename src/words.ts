@@ -86,10 +86,11 @@ export const answers = [
   'balam',
   'mutta',
   'vanam',
-  'jaiva',
+  'kural', // 32. February 26, 2022
   'puzha',
   'paatt',
   'rasam',
+  'jaiva',
   'param',
   'pakal',
   'kayar',

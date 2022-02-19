@@ -1,9 +1,10 @@
 <script setup lang="ts">
 import { onUnmounted } from 'vue'
 import { answers, gameNo, nextMWordleDate, isIndianTimeZone } from './words'
-import Keyboard from './Keyboard.vue'
 import { GameState, GameStatsState, LetterState } from './types'
-import {startCountdown, transliterate} from './utils'
+import {startCountdown, transliterate, disabledLetters} from './utils'
+
+import Keyboard from './Keyboard.vue'
 
 // Get word of the day
 const answer = answers[gameNo]
@@ -102,7 +103,7 @@ async function transliterateRow() {
 
 function onKey(key: string) {
   if (!allowInput) return
-  if (/^[a-zA-Z]$/.test(key)) {
+  if (/^[a-zA-Z]$/.test(key) && disabledLetters.indexOf(key) === -1) {
     fillTile(key.toLowerCase())
   } else if (key === 'Backspace') {
     clearTile()

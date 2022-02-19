@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import { LetterState } from './types'
+import {disabledLetters} from './utils'
 
 defineProps<{
   letterStates: Record<string, LetterState>
@@ -23,6 +24,7 @@ const rows = [
       <button
         v-for="key in row"
         :class="[key.length > 1 && 'big', letterStates[key]]"
+        :disabled="disabledLetters.indexOf(key) != -1"
         @click="$emit('key', key)"
       >
         <span v-if="key !== 'Backspace'">{{ key }}</span>
@@ -83,5 +85,10 @@ button:last-of-type {
 }
 button.big {
   flex: 1.5;
+}
+button[disabled] {
+  color: #bbb;
+  background: #eee;
+  cursor: default;
 }
 </style>

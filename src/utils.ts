@@ -31,3 +31,5 @@ export async function transliterate(input: string, signal: AbortSignal | null) {
   const response = await fetch(`${serverURL}/atl/ml/${input}`, {signal})
   return await response.json()
 }
+
+export const disabledLetters = "qwxc".split('')
