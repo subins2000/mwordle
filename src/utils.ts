@@ -32,4 +32,4 @@ export async function transliterate(input: string, signal: AbortSignal | null) {
   return await response.json()
 }
 
-export const disabledLetters = "qwxc".split('')
+export const disabledLetters = "qwx".split('')
