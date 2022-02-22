@@ -328,7 +328,7 @@ function updateGameStats() {
 }
 
 function gameWon() {
-  appreciationWord = ['Genius', 'Magnificent', 'Impressive', 'Splendid', 'Great', 'Phew'][
+  appreciationWord = ['ഗംഭീരം', 'അടിപൊളി', 'മനോഹരം', 'പൊളി !', 'അമ്പോ !', 'രക്ഷപ്പെട്ട് 😌'][
     lastFilledRowIndex
   ]
   success = true
