@@ -49,7 +49,7 @@ export function getGameNumber() {
  * WANT
  * TO
  * SEE
- * ANSWERS 
+ * ANSWERS
  **************/
 
 // Avoid words ending with 'u'
@@ -78,7 +78,7 @@ export const answers = [
   'madhu',
   'vazhi',
   'jilla',
-  'dveep', 
+  'dveep',
   'jalam', // 25. February 19, 2022
   'sabha',
   'thala',
@@ -120,13 +120,12 @@ export const answers = [
   'mozhi',
   'appam', // March 31, 2022
   'mikav',
-  'neeli',
-  'veyil',
-  'mulla',
-  'vayar',
   'vayal',
+  'neeli',
+  'mulla',
   'ruchi',
   'pizha',
+  'veyil',
   'nanma',
   'konna',
   'vaaya',
@@ -136,9 +135,10 @@ export const answers = [
   'illam',
   'potti',
   'appan',
+  'vayar',
   'kappa',
   'chuma',
-  'karam',
+  'karam', // April 20, 2022
   'janam',
   'manam',
   'vaiki',
