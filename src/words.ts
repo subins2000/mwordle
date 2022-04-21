@@ -52,6 +52,8 @@ export function getGameNumber() {
  * ANSWERS
  **************/
 
+// Use https://www.somacon.com/p568.php to find duplicates in a list
+
 // Avoid words ending with 'u'
 export const answers = [
   'aalam', // 0. January 26, 2022
@@ -140,16 +142,31 @@ export const answers = [
   'chuma',
   'karam', // April 20, 2022
   'janam',
-  'manam',
+  'kanav',
   'vaiki',
-  'malar',
+  'kutta',
+  'harji',
+  'vadhu',
+  'pokki',
+  'mizhi',
+  'nanav',
+  'aruvi',
+  'oruma',
+  'kozha',
+  'kayam',
+  'thuni',
+  'puzhu',
+  'mushi',
+  'malar', // May 7, 2022
   'plaav',
   'soura',
   'thekk',
+  'manam',
+  'varan',
   'jayam',
   'chiri',
   'vayya',
-  'poyka'
+  'poyka',
 ]
 
 export const gameNo = getGameNumber()
