@@ -160,12 +160,23 @@ export const answers = [
   'malar', // May 7, 2022
   'plaav',
   'soura',
+  'loham',
+  'kanal',
+  'lelam',
+  'valav',
+  'paava',
+  'shiva',
+  'doore',
+  'kurav',
+  'maami',
   'thekk',
-  'manam',
+  'manam', // May 20, 2022
   'varan',
+  'kalav',
   'jayam',
   'chiri',
   'vayya',
+  'piriv',
   'poyka',
 ]
 
