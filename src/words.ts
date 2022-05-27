@@ -177,7 +177,13 @@ export const answers = [
   'chiri',
   'vayya',
   'piriv',
-  'poyka',
+  'poyka', // May 27, 2022
+  'oothi',
+  'lajja',
+  'pothi',
+  'ugran',
+  'chepp',
+  'irutt', // June 2, 2022
 ]
 
 export const gameNo = getGameNumber()
