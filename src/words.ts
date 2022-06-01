@@ -184,6 +184,11 @@ export const answers = [
   'ugran',
   'chepp',
   'irutt', // June 2, 2022
+  'kutti',
+  'uppan',
+  'kokka',
+  'poott',
+  'katta', // June 7, 2022
 ]
 
 export const gameNo = getGameNumber()
