@@ -191,10 +191,9 @@ export const answers = [
   'katta', // June 7, 2022
   'muzha',
   'chukk',
-  'jatti',
   'thuka',
   'paisa',
-  'paara', // June 13, 2022
+  'paara', // June 12, 2022
 ]
 
 export const gameNo = getGameNumber()
