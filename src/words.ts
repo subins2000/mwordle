@@ -202,6 +202,13 @@ export const answers = [
   'neela',
   'thatt',
   'nilam', // June 20, 2022
+  'unni',
+  'pazham',
+  'pettu',
+  'chevi',
+  'ennum',
+  'keeri',
+  'kuzhal'
 ]
 
 export const gameNo = getGameNumber()

@@ -7,12 +7,12 @@ import {startCountdown, transliterate, disabledLetters} from './utils'
 import Keyboard from './Keyboard.vue'
 
 // Get word of the day
-const answer = answers[gameNo]
+let answer = answers[gameNo]
 
 // Board state. Each tile is represented as { letter, state }
 const board = $ref(
   Array.from({ length: 6 }, () =>
-    Array.from({ length: 5 }, () => ({
+    Array.from({ length: answer.length }, () => ({
       letter: '',
       state: LetterState.INITIAL
     }))
@@ -599,17 +599,6 @@ if (localStorage.getItem("gameState")) {
   font-weight: bold;
   font-size: 1rem;
 }
-#board {
-  display: grid;
-  grid-template-rows: repeat(6, 1fr);
-  grid-gap: 5px;
-  padding: 10px;
-  box-sizing: border-box;
-  --height: min(420px, calc(var(--vh, 100vh) - 290px));
-  height: var(--height);
-  width: min(350px, calc(var(--height) / 6 * 5));
-  margin: 0px auto;
-}
 .overlay-bg {
   position: absolute;
   top: 0;
@@ -691,13 +680,27 @@ if (localStorage.getItem("gameState")) {
 #stats .stat .number {
   font-size: 1.8rem;
 }
+#board {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 5px;
+  padding: 10px;
+  margin: 0px auto;
+  margin-bottom: 5px;
+}
 .row {
-  display: grid;
-  grid-template-columns: repeat(5, 1fr);
-  grid-gap: 5px;
+  display: flex;
+  justify-content: center;
+  gap: 5px;
+  position: relative;
+  max-width: 100%;
 }
 .tile {
-  width: 100%;
+  height:0;
+  --width: min(62px, 7vh);
+  width: var(--width);
+  padding-bottom: var(--width);
   font-size: 2rem;
   line-height: 2rem;
   font-weight: bold;
