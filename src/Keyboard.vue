@@ -48,7 +48,7 @@ const rows = [
 
 <style scoped>
 #keyboard {
-  margin: 10px 8px 0;
+  margin: 0 8px;
   user-select: none;
 }
 .row {
