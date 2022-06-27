@@ -208,7 +208,10 @@ export const answers = [
   'chevi',
   'ennum',
   'keeri',
-  'kuzhal'
+  'kuzhal',
+  'irul',
+  'uyaram',
+  'kaana'
 ]
 
 export const gameNo = getGameNumber()
