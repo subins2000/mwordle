@@ -211,7 +211,19 @@ export const answers = [
   'kuzhal',
   'irul',
   'uyaram',
-  'kaana'
+  'kaana', // June 30, 2022
+  'kuppi',
+  'gasal',
+  'chatti',
+  'nuna',
+  'pana',
+  'thotti',
+  'thuka',
+  'kavil',
+  'muni',
+  'vett',
+  'muna',
+  'nura', // July 12, 2022
 ]
 
 export const gameNo = getGameNumber()
