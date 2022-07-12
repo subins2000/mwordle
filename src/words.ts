@@ -224,6 +224,7 @@ export const answers = [
   'vett',
   'muna',
   'nura', // July 12, 2022
+  'kuru'
 ]
 
 export const gameNo = getGameNumber()
