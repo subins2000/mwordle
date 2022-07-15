@@ -227,6 +227,10 @@ export const answers = [
   'kuru',
   'patha',
   'kani', // July 15, 2022
+  'ilam',
+  'thennal',
+  'kuli',
+  'annum',
 ]
 
 export const gameNo = getGameNumber()
