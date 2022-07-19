@@ -231,6 +231,9 @@ export const answers = [
   'thennal',
   'kuli',
   'annum',
+  'kili',
+  'pukil',
+  // 'kali',
 ]
 
 export const gameNo = getGameNumber()
