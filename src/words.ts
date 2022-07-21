@@ -233,7 +233,9 @@ export const answers = [
   'annum',
   'kili',
   'pukil',
-  // 'kali',
+  'piri',
+  '',
+  'kali',
 ]
 
 export const gameNo = getGameNumber()
