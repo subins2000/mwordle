@@ -234,8 +234,10 @@ export const answers = [
   'kili',
   'pukil',
   'piri',
-  '',
-  'kali',
+  'jeevan',
+  'samayam',
+  'kuthira',
+  'kali', // July 26, 2022
 ]
 
 export const gameNo = getGameNumber()
