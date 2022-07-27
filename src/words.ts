@@ -239,7 +239,19 @@ export const answers = [
   'kuthira',
   'kali', // July 26, 2022
   'mala',
+  'mazhu',
   'kula',
+  'porul',
+  'chathi',
+  'kallam',
+  'vala',
+  'oru',
+  'vela',
+  'olivil',
+  'thiriv',
+  'sathyam', // August 7, 2022
 ]
+
+// 'asooya',
 
 export const gameNo = getGameNumber()
