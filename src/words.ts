@@ -238,6 +238,8 @@ export const answers = [
   'samayam',
   'kuthira',
   'kali', // July 26, 2022
+  'mala',
+  'kula',
 ]
 
 export const gameNo = getGameNumber()
