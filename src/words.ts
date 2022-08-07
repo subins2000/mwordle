@@ -250,8 +250,9 @@ export const answers = [
   'olivil',
   'thiriv',
   'sathyam', // August 7, 2022
+  'thukal',
+  'kaayal',
+  'asooya', // August 10, 2022
 ]
-
-// 'asooya',
 
 export const gameNo = getGameNumber()
