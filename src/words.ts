@@ -253,6 +253,8 @@ export const answers = [
   'thukal',
   'kaayal',
   'asooya', // August 10, 2022
+  'sathram',
+  'vratham',
 ]
 
 export const gameNo = getGameNumber()
