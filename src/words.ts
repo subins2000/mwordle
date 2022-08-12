@@ -255,6 +255,10 @@ export const answers = [
   'asooya', // August 10, 2022
   'sathram',
   'vratham',
+  'cheera',
+  'ulli',
+  'kuri',
+  'pott' // August 16, 2022
 ]
 
 export const gameNo = getGameNumber()
