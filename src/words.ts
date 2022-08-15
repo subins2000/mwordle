@@ -258,7 +258,16 @@ export const answers = [
   'cheera',
   'ulli',
   'kuri',
-  'pott' // August 16, 2022
+  'pott', // August 16, 2022
+  'karu',
+  'parunth',
+  'nulli',
+  'pothu',
+  'thulyam',
+  'sneham',
+  'uluva',
+  'cheral',
+  'karupp', // August 25, 2022
 ]
 
 export const gameNo = getGameNumber()
