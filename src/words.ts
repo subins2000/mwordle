@@ -268,6 +268,21 @@ export const answers = [
   'uluva',
   'cheral',
   'karupp', // August 25, 2022
+  'pera',
+  'pani',
+  'kitti',
+  'kola',
+  'lahari',
+  'vili',
+  'verupp',
+  'neelam',
+  'gulika',
+  'vila',
+  'niyamam',
+  'roopa',
+  'paayal',
+  'rachana',
+  'putti', // September 9, 2022
 ]
 
 export const gameNo = getGameNumber()
