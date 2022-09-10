@@ -283,7 +283,18 @@ export const answers = [
   'paayal',
   'rachana',
   'putti', // September 9, 2022
-  'onam'
+  'onam',
+  'gama',
+  'joli',
+  'patti',
+  'muram',
+  'thura',
+  'kothi',
+  'mazhu',
+  'vanitha',
+  'neethi',
+  'kazhiv',
+  'visham', // September 21, 2022
 ]
 
 export const gameNo = getGameNumber()
