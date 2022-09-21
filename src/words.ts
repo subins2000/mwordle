@@ -295,6 +295,8 @@ export const answers = [
   'neethi',
   'kazhiv',
   'visham', // September 21, 2022
+  'vari',
+  'kinnam', // September 23, 2022
 ]
 
 export const gameNo = getGameNumber()
