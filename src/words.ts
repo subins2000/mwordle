@@ -297,6 +297,9 @@ export const answers = [
   'visham', // September 21, 2022
   'vari',
   'kinnam', // September 23, 2022
+  'vellam',
+  'chaavi',
+  'kinaav',
 ]
 
 export const gameNo = getGameNumber()
