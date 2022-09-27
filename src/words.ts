@@ -300,6 +300,17 @@ export const answers = [
   'vellam',
   'chaavi',
   'kinaav',
+  'muri',
+  'puli',
+  'kulam',
+  'chuzhi',
+  'thaaram',
+  'janal',
+  'vaathil',
+  'amma',
+  'theeram',
+  'yamuna',
+  'kari', // October 7
 ]
 
 export const gameNo = getGameNumber()
