@@ -313,6 +313,16 @@ export const answers = [
   'kari', // October 7
   'gunam',
   'lipi', // October 9
+  'valli',
+  'chali',
+  'raksha',
+  'aikyam',
+  'gamanam',
+  'yogam',
+  'tharuka',
+  'kalli',
+  'vidham',
+  'pulli', // October 19
 ]
 
 export const gameNo = getGameNumber()
