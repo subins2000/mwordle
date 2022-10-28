@@ -333,6 +333,26 @@ export const answers = [
   'thavala', // October 27
   'rogi',
   'yuvathi',
+  'unangi',
+  'puram',
+  'kathak',
+  'laksham',
+  'akam',
+  'minnal',
+  'avan',
+  'virunn',
+  'aviyal',
+  'kshama',
+  'arike',
+  'mara',
+  'innale',
+  'thiriv',
+  'sheelam',
+  'aval',
+  'lakshmi',
+  'irunnu',
+  'ariv',
+  'vanangi', // Nov 18
 ]
 
 export const gameNo = getGameNumber()
