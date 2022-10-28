@@ -330,7 +330,9 @@ export const answers = [
   'eli',
   'thira',
   'naav',
-  'thavala' // October 27
+  'thavala', // October 27
+  'rogi',
+  'yuvathi',
 ]
 
 export const gameNo = getGameNumber()
