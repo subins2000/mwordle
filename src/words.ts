@@ -353,6 +353,7 @@ export const answers = [
   'irunnu',
   'ariv',
   'vanangi', // Nov 18
+  'yuvav'
 ]
 
 export const gameNo = getGameNumber()
