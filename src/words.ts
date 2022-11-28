@@ -363,6 +363,14 @@ export const answers = [
   'bhayam',
   'eriv', // Nov 27
   'mani',
+  'uruli',
+  'inam',
+  'sthalam',
+  'kaav',
+  'vasthu',
+  'thapass',
+  'vaka',
+  'tharam', // Dec 6
 ]
 
 export const gameNo = getGameNumber()
