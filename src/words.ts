@@ -374,6 +374,16 @@ export const answers = [
   'olakka',
   'murukk',
   'thvara',
+  'thuni',
+  'ara',
+  'malli',
+  'raajyam',
+  'putt',
+  'samaram',
+  'chovva',
+  'nell',
+  'bhoomi',
+  'nikuthi', // Dec 19
 ]
 
 export const gameNo = getGameNumber()
