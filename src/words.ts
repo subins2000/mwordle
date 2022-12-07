@@ -371,6 +371,9 @@ export const answers = [
   'thapass',
   'vaka',
   'tharam', // Dec 6
+  'olakka',
+  'murukk',
+  'thvara',
 ]
 
 export const gameNo = getGameNumber()
