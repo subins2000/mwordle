@@ -384,6 +384,8 @@ export const answers = [
   'nell',
   'bhoomi',
   'nikuthi', // Dec 19
+  'chuli',
+  'churuli'
 ]
 
 export const gameNo = getGameNumber()
