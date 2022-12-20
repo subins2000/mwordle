@@ -385,7 +385,15 @@ export const answers = [
   'bhoomi',
   'nikuthi', // Dec 19
   'chuli',
-  'churuli'
+  'yaathra',
+  'roopam',
+  'poraali',
+  'maravi',
+  'kaniv',
+  'manthri',
+  'poothi',
+  'sahaayi',
+  'churuli' // Dec 29
 ]
 
 export const gameNo = getGameNumber()
