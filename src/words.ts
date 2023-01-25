@@ -416,10 +416,12 @@ export const answers = [
   'paal',
   'sukham',
   'nilaav',
-  'azhak',
+  'chill',
   'sandhya',
   'mukham',
   'venna',
+  'keezhe',
+  'kooval', // Jan 26
 ]
 
 export const gameNo = getGameNumber()
