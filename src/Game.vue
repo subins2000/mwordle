@@ -1,13 +1,13 @@
 <script setup lang="ts">
 import { onUnmounted } from 'vue'
-import { answers, gameNo, nextMWordleDate, isIndianTimeZone } from './words'
+import { answers, gameNo, answerNo, nextMWordleDate, isIndianTimeZone } from './words'
 import { GameState, GameStatsState, LetterState } from './types'
 import {startCountdown, transliterate, disabledLetters} from './utils'
 
 import Keyboard from './Keyboard.vue'
 
 // Get word of the day
-let answer = answers[gameNo]
+let answer = answers[answerNo]
 
 // Board state. Each tile is represented as { letter, state }
 const board = $ref(

@@ -29,14 +29,19 @@ export const nextMWordleDate = () => {
 
 // Thanks MaxVT
 // https://stackoverflow.com/a/2627493/1372424
-export function getGameNumber() {
+export function getGameAndAnswerNumber() {
   const now = new Date()
   const diff = Number(now) - Number(gameStartDate)
   let day = Math.floor(diff / (1000 * 60 * 60 * 24))
-  while (day > answers.length) {
+
+  const gameNo = day
+
+  while (day >= answers.length) {
     day -= answers.length
   }
-  return day
+  const answerNo = day
+
+  return {gameNo, answerNo}
 }
 
 /**************
@@ -421,7 +426,22 @@ export const answers = [
   'mukham',
   'venna',
   'keezhe',
-  'kooval', // Jan 26
+  'kooval',
 ]
 
-export const gameNo = getGameNumber()
+export const {gameNo, answerNo} = getGameAndAnswerNumber()
+
+// Test area
+// Date tester method
+function ng() {
+  const now = new Date(2023, 0, 26, 0, 0, 0)
+  const diff = Number(now) - Number(gameStartDate)
+  let day = Math.floor(diff / (1000 * 60 * 60 * 24))
+  while (day >= answers.length) {
+    day = Math.round(day % answers.length)
+  }
+  console.log(day, answers[day])
+  return day
+}
+
+// ng()
