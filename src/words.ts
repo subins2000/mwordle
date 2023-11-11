@@ -62,7 +62,7 @@ export function getGameAndAnswerNumber() {
 // Avoid words ending with 'u'
 export const answers = [
   'aalam', // 0. January 26, 2022
-  'maram',
+  'samam',
   'panni',
   'makan',
   'lokam',
@@ -349,7 +349,7 @@ export const answers = [
   'aviyal',
   'kshama',
   'arike',
-  'mara',
+  'maram',
   'innale',
   'thiriv',
   'sheelam',
