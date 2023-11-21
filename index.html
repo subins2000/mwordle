@@ -4,10 +4,35 @@
     <meta charset="UTF-8" />
     <link rel="icon" href="/favicon.ico" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>VVordle - a Wordle clone with Vue.js</title>
+    <title>മwordle - Malayalam Wordle Game</title>
+    <meta itemprop="name" content="മwordle - Malayalam Wordle Game. mwordle" />
+    <meta itemprop="description" content="Mwordle, Manglish Malayalam wordle game. മwordle" />
+    <meta itemprop="image" content="https://mwordle.subinsb.com/static/favicon.png" />
+
+    <meta name="twitter:title" content="മwordle - Malayalam Wordle Game. mwordle">
+    <meta name="twitter:description" content="Mwordle, Manglish Malayalam wordle game. മwordle">
+    <meta name="twitter:image" content="https://mwordle.subinsb.com/static/favicon.png">
+    <meta name="twitter:card" content="summary">
+
   </head>
   <body>
     <div id="app"></div>
     <script type="module" src="/src/main.ts"></script>
+    <script>
+      if (location.hostname !== "localhost" && location.hostname !== "127.0.0.1" && location.hostname.substr(0, 7) !== '192.168') {
+        if (location.protocol !== 'https:') {
+          location.replace(`https:${location.href.substring(location.protocol.length)}`);
+        } else {
+          var id = "mwordle.subinsb.com";
+          (function(i,s,o,g,r,a,m){i['ccc']=r;i[r]=i[r]||function(){
+          (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+          m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+          })(window,document,'script','https://demos.subinsb.com/sanders/s.js?id='+id,'ga');
+        }
+      } else {
+        window.goatcounter = {no_onload: true}
+      }
+    </script>
+    <script data-goatcounter="https://subinsb.goatcounter.com/count" async src="//gc.zgo.at/count.js"></script>
   </body>
 </html>
